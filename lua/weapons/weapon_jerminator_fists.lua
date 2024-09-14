@@ -59,7 +59,6 @@ function SWEP:HoldTypeThink()
 
     if not oldHoldType or oldHoldType ~= holdType then
         self:SetHoldType( holdType )
-        print( "blarg")
         self.oldHoldType = holdType
 
     end
