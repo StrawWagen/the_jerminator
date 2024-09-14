@@ -90,6 +90,10 @@ local function doSounds()
             end
 
             local truePath = soundLocation .. dir .. "/" .. path
+
+            --local trimmed = string.Replace( truePath, ".mp3", "" )
+            --if string.find( trimmed, ".", nil, true ) then print( truePath ) end
+
             table.insert( jermSounds[dir], truePath )
             count = count + 1
 
