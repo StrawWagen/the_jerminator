@@ -44,19 +44,64 @@ function ENT:AdditionalInitialize()
 
 end
 
-local jermSounds = {}
+ENT.NextRegenHeal = 0
+function ENT:AdditionalThink()
+    if self.NextRegenHeal > CurTime() then return end
+    self.NextRegenHeal = self.NextRegenHeal + 1
+    local oldHealth = self:Health()
+    if oldHealth <= 0 then return end
 
-local _, dirs = file.Find( "sound/the_jerminator/*", "GAME" )
-for _, dir in ipairs( dirs or {} ) do
-    local searchPath = "sound/the_jerminator/" .. dir .. "/*"
-    local found = file.Find( searchPath, "GAME" )
-    jermSounds[dir] = {}
-    for _, path in ipairs( found ) do
-        local truePath = "the_jerminator/" .. dir .. "/" .. path
-        table.insert( jermSounds[dir], truePath )
+    local newHealth = math.Clamp( oldHealth + 2, 0, self:GetMaxHealth() )
+    self:SetHealth( newHealth )
 
-    end
 end
+
+local familyFriendlyVar = CreateConVar( "jerminator_familyfriendly", "0", FCVAR_ARCHIVE, "Blocks most jerma sounds that contain swears, etc.", 0, 1 )
+local badWords = {
+    "fuck",
+    "shit",
+    "ass",
+    "bitch",
+    "butt",
+
+}
+local jermSounds
+local soundLocation = "the_jerminator/"
+
+local function doSounds()
+    jermSounds = {}
+    local count = 0
+
+    local _, dirs = file.Find( "sound/" .. soundLocation .. "*", "GAME" )
+    for _, dir in ipairs( dirs or {} ) do
+        local searchPath = "sound/" .. soundLocation .. dir .. "/*"
+        local found = file.Find( searchPath, "GAME" )
+        jermSounds[dir] = {}
+        for _, path in ipairs( found ) do
+            if familyFriendlyVar:GetBool() then
+                local bad
+                local pathLower = string.lower( path )
+                for _, badWord in ipairs( badWords ) do
+                    if string.find( pathLower, badWord ) then bad = true break end
+
+                end
+                if bad then continue end
+
+            end
+
+            local truePath = soundLocation .. dir .. "/" .. path
+            table.insert( jermSounds[dir], truePath )
+            count = count + 1
+
+        end
+    end
+
+    print( "loaded " .. count .. " jerma soundbytes" )
+
+end
+
+doSounds()
+cvars.AddChangeCallback( "jerminator_familyfriendly", doSounds, "jerminator_resetsounds" )
 
 function ENT:jerm_SpeakARandomSound( directory )
     local inDir = jermSounds[directory]
@@ -76,7 +121,8 @@ function ENT:DoCustomTasks( defaultTasks )
     self.TaskList = {
         ["jerminator_handler"] = {
             OnCreated = function( self, data )
-                self:jerm_SpeakARandomSound( "spawned" )
+                self:Term_SpeakSoundNow( randomJermSoundPath( "spawned" ) )
+
             end,
             EnemyLost = function( self, data )
                 self:jerm_SpeakARandomSound( "searching" )
