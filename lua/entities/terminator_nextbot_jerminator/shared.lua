@@ -63,6 +63,8 @@ local badWords = {
     "ass",
     "bitch",
     "butt",
+    "sex",
+    "dick",
 
 }
 local jermSounds
