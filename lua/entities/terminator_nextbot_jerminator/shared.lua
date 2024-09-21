@@ -249,7 +249,7 @@ function ENT:DoCustomTasks( defaultTasks )
 
                 end )
             end,
-            BehaveUpdate = function( self, data )
+            BehaveUpdatePriority = function( self, data )
                 local offset = 5
                 if self:IsReallyAngry() then
                     offset = 0
