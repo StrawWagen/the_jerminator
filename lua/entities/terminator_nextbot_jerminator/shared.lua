@@ -25,11 +25,8 @@ ENT.Models = { JERMINATOR_MODEL }
 
 ENT.TERM_FISTS = "weapon_jerminator_fists"
 
-function ENT:OnKilledGenericEnemyLine( enemyLost )
-end
-
 ENT.term_SoundPitchShift = 0
-ENT.term_SoundLevelShift = 15
+ENT.term_SoundLevelShift = 20
 ENT.CanSpeak = true
 ENT.NextTermSpeak = 0
 
@@ -133,8 +130,14 @@ function ENT:DoCustomTasks( defaultTasks )
             EnemyLost = function( self, data )
                 self:jerm_SpeakARandomSound( "searching" )
             end,
-            EnemyFound = function( self, data )
-                self:jerm_SpeakARandomSound( "idle" )
+            EnemyFound = function( self, data, enemy, sinceLastFound )
+                if sinceLastFound < 10 then return end
+                local path = randomJermSoundPath( "idle" )
+                if self:IsReallyAngry() then
+                    path = randomJermSoundPath( "anger" )
+
+                end
+                self:Term_SpeakSoundNow( path )
             end,
             StartStaring = function( self, data )
                 local nextLine = data.nextStareLine or 0
@@ -187,11 +190,13 @@ function ENT:DoCustomTasks( defaultTasks )
 
             end,
             OnAnger = function( self, data )
+                data.nextRareAngry = CurTime() + math.random( 10, 20 )
                 self:jerm_SpeakARandomSound( "anger" )
 
             end,
             OnReallyAnger = function( self, data )
                 self:jerm_SpeakARandomSound( "anger" )
+                data.nextRareAngry = CurTime() + math.random( 10, 20 )
 
             end,
             OnInstantKillEnemy = function( self, data )
@@ -250,12 +255,18 @@ function ENT:DoCustomTasks( defaultTasks )
                 end )
             end,
             BehaveUpdatePriority = function( self, data )
+                local enemy = self:GetEnemy()
+                local path = self:GetPath()
                 local offset = 5
-                if self:IsReallyAngry() then
+                local headingToEnem = IsValid( enemy ) and path and path:GetEnd() and path:GetEnd():DistToSqr( enemy:GetPos() ) < 500^2 and path:GetLength() < 1000
+                if headingToEnem then
+                    offset = -5
+
+                elseif self:IsReallyAngry() then
                     offset = 0
 
                 elseif self.IsSeeEnemy and not self:primaryPathIsValid() then
-                    offset = 0
+                    offset = 1
 
                 elseif self:IsAngry() then
                     offset = 2
@@ -265,13 +276,19 @@ function ENT:DoCustomTasks( defaultTasks )
                 local speaking = nextLine > CurTime()
 
                 if speaking then return end
-                local enemy = self:GetEnemy()
                 if not IsValid( enemy ) then
                     self:jerm_SpeakARandomSound( "idle" )
 
                 else
-                    self:jerm_SpeakARandomSound( "searching" )
+                    local rareAngry = data.nextRareAngry or 0
+                    if self:IsAngry() and headingToEnem and rareAngry < CurTime() then
+                        data.nextRareAngry = CurTime() + math.random( 5, 15 )
+                        self:jerm_SpeakARandomSound( "anger" )
 
+                    else
+                        self:jerm_SpeakARandomSound( "searching" )
+
+                    end
                 end
             end
         },
