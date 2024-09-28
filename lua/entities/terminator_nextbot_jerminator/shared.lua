@@ -30,6 +30,7 @@ ENT.term_SoundLevelShift = 20
 ENT.CanSpeak = true
 ENT.NextTermSpeak = 0
 
+ENT.FistDamageMul = 1.5
 ENT.SpawnHealth = 2000
 
 ENT.MetallicMoveSounds = false
@@ -44,7 +45,7 @@ end
 ENT.NextRegenHeal = 0
 function ENT:AdditionalThink()
     if self.NextRegenHeal > CurTime() then return end
-    self.NextRegenHeal = self.NextRegenHeal + 1
+    self.NextRegenHeal = CurTime() + 0.25
     local oldHealth = self:Health()
     if oldHealth <= 0 then return end
 
@@ -131,6 +132,7 @@ function ENT:DoCustomTasks( defaultTasks )
                 self:jerm_SpeakARandomSound( "searching" )
             end,
             EnemyFound = function( self, data, enemy, sinceLastFound )
+                if not sinceLastFound then return end -- TODO, remove this line
                 if sinceLastFound < 10 then return end
                 local path = randomJermSoundPath( "idle" )
                 if self:IsReallyAngry() then
