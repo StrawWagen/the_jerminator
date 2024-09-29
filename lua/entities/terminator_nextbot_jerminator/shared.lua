@@ -132,7 +132,6 @@ function ENT:DoCustomTasks( defaultTasks )
                 self:jerm_SpeakARandomSound( "searching" )
             end,
             EnemyFound = function( self, data, enemy, sinceLastFound )
-                if not sinceLastFound then return end -- TODO, remove this line
                 if sinceLastFound < 10 then return end
                 local path = randomJermSoundPath( "idle" )
                 if self:IsReallyAngry() then
