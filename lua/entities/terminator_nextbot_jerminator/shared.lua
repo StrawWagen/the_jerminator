@@ -241,6 +241,15 @@ function ENT:DoCustomTasks( defaultTasks )
                     pitchShift = math.random( 0, 20 )
                     data.nextFireSpeak = CurTime() + math.Rand( 0.5, 1.5 )
 
+                elseif ( dealt > 25 and self:Health() <= self:GetMaxHealth() * 0.15 ) or ( dealt > 50 and self:getLostHealth() > 75 ) then
+                    path = randomJermSoundPath( "painsevere" )
+                    timer.Simple( 0.1, function()
+                        if not IsValid( self ) then return end
+                        if self:Health() <= 0 then return end
+                        self:jerm_SpeakARandomSound( "pain" )
+
+                    end )
+
                 end
 
                 self:Term_SpeakSoundNow( path, pitchShift )
