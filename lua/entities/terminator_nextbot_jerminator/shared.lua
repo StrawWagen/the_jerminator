@@ -256,7 +256,7 @@ function ENT:DoCustomTasks( defaultTasks )
             end,
             OnKilled = function( self, damage )
                 local lvl = 90 + self.term_SoundLevelShift
-                local pit = 90 + self.term_SoundPitchShift
+                local pit = math.Rand( 99, 101 ) + self.term_SoundPitchShift
                 local pos = self:GetShootPos()
                 self:Term_SpeakSoundNow( "common/null.wav" )
                 timer.Simple( 0.75, function()
