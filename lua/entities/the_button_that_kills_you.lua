@@ -152,6 +152,7 @@ function ENT:KillYou( toKill )
     toKill.PressingTheButtonThatKillsYou = true
 
     timer.Simple( 0.5, function()
+        if !IsValid( self ) then return end
         self:EmitSound( "buttons/button8.wav", 90, 80 )
         util.ScreenShake( self:GetPos(), 6, 20, 1, 3000 )
 
