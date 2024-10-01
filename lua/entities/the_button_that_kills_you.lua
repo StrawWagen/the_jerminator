@@ -148,8 +148,15 @@ ENT.Whaps = {
 }
 function ENT:KillYou( toKill )
     self:EmitSound( "plats/elevator_stop1.wav", 90, 120 )
+    self:EmitSound( "buttons/button6.wav", 90, 120 )
     toKill.PressingTheButtonThatKillsYou = true
+
     timer.Simple( 0.5, function()
+        self:EmitSound( "buttons/button8.wav", 90, 80 )
+        util.ScreenShake( self:GetPos(), 6, 20, 1, 3000 )
+
+    end )
+    timer.Simple( 0.75, function()
         if !IsValid( toKill ) then return end
         toKill.PressingTheButtonThatKillsYou = nil
         util.ScreenShake( toKill:GetPos(), 16, 20, 0.4, 3000 )
