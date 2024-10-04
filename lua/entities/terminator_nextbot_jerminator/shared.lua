@@ -133,12 +133,12 @@ function ENT:DoCustomTasks( defaultTasks )
             end,
             EnemyFound = function( self, data, enemy, sinceLastFound )
                 if sinceLastFound < 10 then return end
-                local path = randomJermSoundPath( "idle" )
+                local path = "idle"
                 if self:IsReallyAngry() then
-                    path = randomJermSoundPath( "anger" )
+                    path = "anger"
 
                 end
-                self:Term_SpeakSoundNow( path )
+                self:jerm_SpeakARandomSound( path )
             end,
             StartStaring = function( self, data )
                 local nextLine = data.nextStareLine or 0
@@ -150,12 +150,12 @@ function ENT:DoCustomTasks( defaultTasks )
                 if self:IsFists() then
                     local toleranceTime = data.punchToleranceTime or 0
                     local tolerance = toleranceTime - CurTime()
-                    local increment = 5
-                    if self:IsReallyAngry() then
-                        increment = 30
+                    local increment = 10
+                    if self:IsReallyAngry() then -- he doesn't do funny stuff when he's mad :(
+                        increment = 40
 
                     elseif self:IsAngry() then
-                        increment = 15
+                        increment = 20
 
                     end
                     if math.random( 1, increment ) < tolerance then return end
@@ -165,16 +165,12 @@ function ENT:DoCustomTasks( defaultTasks )
                     self:Term_SpeakSoundNow( randomJermSoundPath( "effort" ) )
 
                 else
-                    local chance = 15
+                    local chance = 5
                     if self:GetWeapon().terminator_ReallyLikesThisOne then
-                        chance = 75
+                        chance = 50
 
                     end
                     if math.random( 1, 100 ) > chance then
-                        if ( self.NextTermSpeak + 1 ) < CurTime() then
-                            self:jerm_SpeakARandomSound( "idle" )
-
-                        end
                         return
 
                     end
@@ -191,18 +187,19 @@ function ENT:DoCustomTasks( defaultTasks )
 
             end,
             OnAnger = function( self, data )
-                data.nextRareAngry = CurTime() + math.random( 10, 20 )
+                self.jerm_nextRareAngry = CurTime() + math.random( 10, 20 )
                 self:jerm_SpeakARandomSound( "anger" )
 
             end,
             OnReallyAnger = function( self, data )
                 self:jerm_SpeakARandomSound( "anger" )
-                data.nextRareAngry = CurTime() + math.random( 10, 20 )
+                self.jerm_nextRareAngry = CurTime() + math.random( 10, 20 )
 
             end,
             OnInstantKillEnemy = function( self, data )
                 local path = randomJermSoundPath( "killed1shot" )
                 self:Term_SpeakSoundNow( path )
+                self:jerm_SpeakARandomSound( "killed" )
 
             end,
             OnKillEnemy = function( self, data )
@@ -214,7 +211,7 @@ function ENT:DoCustomTasks( defaultTasks )
                 local toleranceTime = data.jumpToleranceTime or 0
                 local tolerance = toleranceTime - CurTime()
                 local dealt = height
-                if dealt < 75 and math.random( 1, dealt ) < tolerance then return end
+                if dealt < 125 and math.random( 1, dealt ) < tolerance then return end
 
                 data.jumpToleranceTime = math.max( toleranceTime + dealt / 2, CurTime() + dealt )
                 self:Term_SpeakSoundNow( randomJermSoundPath( "dodge" ) )
@@ -256,10 +253,10 @@ function ENT:DoCustomTasks( defaultTasks )
             end,
             OnKilled = function( self, damage )
                 local lvl = 90 + self.term_SoundLevelShift
-                local pit = math.Rand( 99, 101 ) + self.term_SoundPitchShift
+                local pit = math.Rand( 95, 97 ) + self.term_SoundPitchShift
                 local pos = self:GetShootPos()
-                self:Term_SpeakSoundNow( "common/null.wav" )
-                timer.Simple( 0.75, function()
+                self:Term_SpeakSoundNow( "painsevere" )
+                timer.Simple( 1.5, function()
                     sound.Play( randomJermSoundPath( "death" ), pos, lvl, pit, 1 )
 
                 end )
@@ -290,9 +287,9 @@ function ENT:DoCustomTasks( defaultTasks )
                     self:jerm_SpeakARandomSound( "idle" )
 
                 else
-                    local rareAngry = data.nextRareAngry or 0
+                    local rareAngry = self.jerm_nextRareAngry or 0
                     if self:IsAngry() and headingToEnem and rareAngry < CurTime() then
-                        data.nextRareAngry = CurTime() + math.random( 5, 15 )
+                        self.jerm_nextRareAngry = CurTime() + math.random( 5, 15 )
                         self:jerm_SpeakARandomSound( "anger" )
 
                     else
