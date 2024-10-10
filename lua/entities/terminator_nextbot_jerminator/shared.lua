@@ -1,4 +1,6 @@
 -- SOUNDS CREDIT TO https://drive.google.com/drive/folders/1CM61yeIq3NpyZKQYCljL9Oa4I2SnpKVi
+-- NEWER SOUNDS CREDIT TO RANDOM CLIP DUMPS
+-- credit to jerma :)
 
 AddCSLuaFile()
 
@@ -31,7 +33,7 @@ ENT.CanSpeak = true
 ENT.NextTermSpeak = 0
 
 ENT.FistDamageMul = 1.5
-ENT.SpawnHealth = 2000
+ENT.SpawnHealth = 1500
 
 ENT.MetallicMoveSounds = false
 ENT.DoMetallicDamage = false
@@ -118,6 +120,44 @@ end
 local function randomJermSoundPath( directory )
     local inDir = jermSounds[directory]
     return inDir[ math.random( 1, #inDir ) ]
+
+end
+
+-- groups of jermas have special logic that keeps them from attacking outright
+function ENT:EnemyIsLethalInMelee()
+    local enemy = self:GetEnemy()
+    if not IsValid( enemy ) then return false end
+
+    local boxed = self.jerminator_THEYREBOXEDIN or 0
+
+    if boxed > CurTime() or ( self.alwaysManiac and self:IsReallyAngry() ) then
+        return BaseClass.EnemyIsLethalInMelee( self )
+
+    end
+
+    local allies = self:GetNearbyAllies()
+    local inAGroup = #allies >= 1
+    if inAGroup then
+        if self:EnemyIsBoxedIn() then
+            self.jerminator_THEYREBOXEDIN = CurTime() + 15
+            self:ReallyAnger( 15 )
+            for _, ally in ipairs( allies ) do
+                if not IsValid( ally ) then return end
+                ally.jerminator_THEYREBOXEDIN = CurTime() + 15
+                ally:ReallyAnger( 15 )
+
+            end
+            return BaseClass.EnemyIsLethalInMelee( self )
+
+        end
+        if IsValid( enemy ) and enemy.Health and enemy:Health() <= enemy:GetMaxHealth() * 0.75 then -- KILL IT
+            return BaseClass.EnemyIsLethalInMelee( self )
+
+        end
+        return self.IsSeeEnemy
+
+    end
+    return BaseClass.EnemyIsLethalInMelee( self )
 
 end
 
