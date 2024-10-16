@@ -292,14 +292,23 @@ function ENT:DoCustomTasks( defaultTasks )
 
             end,
             OnKilled = function( self, damage )
-                local lvl = 90 + self.term_SoundLevelShift
+                local lvl = 95 + self.term_SoundLevelShift
                 local pit = math.Rand( 95, 97 ) + self.term_SoundPitchShift
                 local pos = self:GetShootPos()
-                self:Term_SpeakSoundNow( "painsevere" )
+                self:Term_SpeakSoundNow( "common/null.wav", 10 )
+                local path1 = randomJermSoundPath( "death" )
                 timer.Simple( 1.5, function()
-                    sound.Play( randomJermSoundPath( "death" ), pos, lvl, pit, 1 )
+                    sound.Play( path1, pos, lvl, pit, 1 )
 
                 end )
+                if SoundDuration( path1 ) <= 2 then
+                    local path2 = randomJermSoundPath( "death" )
+                    timer.Simple( 3, function()
+                        if path1 == path2 then return end
+                        sound.Play( path2, pos, lvl, pit, 1 )
+
+                    end )
+                end
             end,
             BehaveUpdatePriority = function( self, data )
                 local enemy = self:GetEnemy()
