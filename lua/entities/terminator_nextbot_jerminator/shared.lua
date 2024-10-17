@@ -42,6 +42,8 @@ function ENT:AdditionalInitialize()
     self.isTerminatorHunterChummy = "jerminator"
     self.alwaysManiac = math.random( 0, 100 ) < 20
 
+    self.jerminator_MatState = ""
+
 end
 
 ENT.NextRegenHeal = 0
@@ -232,9 +234,13 @@ function ENT:DoCustomTasks( defaultTasks )
 
             end,
             OnReallyAnger = function( self, data )
-                self:jerm_SpeakARandomSound( "anger" )
                 self.jerm_nextRareAngry = CurTime() + math.random( 10, 20 )
+                timer.Simple( 0.1, function()
+                    if not IsValid( self ) then return end
+                    self:Term_SpeakSoundNow( randomJermSoundPath( "anger" ) )
+                    self:jerm_SpeakARandomSound( "anger" )
 
+                end )
             end,
             OnInstantKillEnemy = function( self, data )
                 local path = randomJermSoundPath( "killed1shot" )
@@ -311,6 +317,21 @@ function ENT:DoCustomTasks( defaultTasks )
                 end
             end,
             BehaveUpdatePriority = function( self, data )
+
+                local reallyAngry = self:IsReallyAngry()
+                if reallyAngry then
+                    self.jerminator_MatState = "jerma985/jermasusimproved"
+
+                else
+                    self.jerminator_MatState = ""
+
+                end
+
+                if self:GetMaterial() ~= self.jerminator_MatState then
+                    self:SetMaterial( self.jerminator_MatState )
+
+                end
+
                 local enemy = self:GetEnemy()
                 local path = self:GetPath()
                 local offset = 5
@@ -318,7 +339,7 @@ function ENT:DoCustomTasks( defaultTasks )
                 if headingToEnem then
                     offset = -5
 
-                elseif self:IsReallyAngry() then
+                elseif reallyAngry then
                     offset = 0
 
                 elseif self.IsSeeEnemy and not self:primaryPathIsValid() then
