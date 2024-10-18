@@ -3,10 +3,10 @@ AddCSLuaFile()
 
 ENT.Base = "terminator_nextbot_jerminator"
 DEFINE_BASECLASS( ENT.Base )
-ENT.PrintName = "Jerma985 (Scared)"
+ENT.PrintName = "Jerma (Scared)"
 ENT.Spawnable = false
 list.Set( "NPC", "terminator_nextbot_jerminator_scared", {
-    Name = "Jerma985 (Scared)",
+    Name = "Jerma (Scared)",
     Class = "terminator_nextbot_jerminator_scared",
     Category = "Terminator Nextbot",
 } )
