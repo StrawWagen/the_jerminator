@@ -24,7 +24,7 @@ function ENT:EnemyIsLethalInMelee()
 end
 
 ENT.IsFodder = true
-ENT.CoroutineThresh = 0.0015
+ENT.CoroutineThresh = 0.002
 
 ENT.term_SoundLevelShift = 10
 

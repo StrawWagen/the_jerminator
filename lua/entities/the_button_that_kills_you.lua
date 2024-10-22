@@ -163,7 +163,11 @@ function ENT:KillYou( toKill )
         util.ScreenShake( toKill:GetPos(), 16, 20, 0.4, 3000 )
         util.ScreenShake( toKill:GetPos(), 1, 20, 2, 8000 )
 
-        local killer = self or toKill
+        local killer = self
+        if not IsValid( killer ) then
+            killer =  toKill
+
+        end
 
         local dmgInfo = DamageInfo()
         dmgInfo:SetDamage( math.huge )
