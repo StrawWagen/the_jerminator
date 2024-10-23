@@ -34,6 +34,8 @@ ENT.NextTermSpeak = 0
 
 ENT.FistDamageMul = 1.5
 ENT.SpawnHealth = 1500
+ENT.HealthRegen = 2
+ENT.HealthRegenInterval = 0.25
 
 ENT.MetallicMoveSounds = false
 ENT.DoMetallicDamage = false
@@ -43,18 +45,6 @@ function ENT:AdditionalInitialize()
     self.alwaysManiac = math.random( 0, 100 ) < 20
 
     self.jerminator_MatState = ""
-
-end
-
-ENT.NextRegenHeal = 0
-function ENT:AdditionalThink()
-    if self.NextRegenHeal > CurTime() then return end
-    self.NextRegenHeal = CurTime() + 0.25
-    local oldHealth = self:Health()
-    if oldHealth <= 0 then return end
-
-    local newHealth = math.Clamp( oldHealth + 2, 0, self:GetMaxHealth() )
-    self:SetHealth( newHealth )
 
 end
 
