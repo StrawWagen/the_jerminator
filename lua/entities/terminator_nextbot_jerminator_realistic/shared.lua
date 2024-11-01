@@ -287,7 +287,7 @@ function ENT:EnemyIsLethalInMelee()
 
         end
     else
-        return true
+        return BaseClass.EnemyIsLethalInMelee( self )
 
     end
 end
