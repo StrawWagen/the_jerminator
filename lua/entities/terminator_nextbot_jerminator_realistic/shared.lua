@@ -35,14 +35,33 @@ ENT.NextTermSpeak = 0
 ENT.FistDamageMul = 1.5
 ENT.SpawnHealth = 1500
 ENT.HealthRegen = 2
-ENT.HealthRegenInterval = 0.25
+ENT.HealthRegenInterval = 0.5
 
 ENT.MetallicMoveSounds = false
 ENT.DoMetallicDamage = false
 
 function ENT:AdditionalInitialize()
     self.isTerminatorHunterChummy = "jerminator"
-    self.alwaysManiac = math.random( 0, 100 ) < 20
+    self.potentialManiac = math.random( 0, 100 ) < 30
+    self.alwaysManiac = function( self2 )
+        local allies = self2:GetNearbyAllies()
+        local oneHasEnemy = false
+        for _, ally in ipairs( allies ) do
+            if not IsValid( ally ) then continue end
+            local enem = ally:GetEnemy()
+            if IsValid( enem ) then
+                oneHasEnemy = true
+
+            end
+        end
+        if oneHasEnemy then
+            return false
+
+        else
+            return self2.potentialManiac
+
+        end
+    end
 
     self.jerminator_MatState = ""
 
@@ -85,9 +104,6 @@ local function doSounds()
 
             local truePath = soundLocation .. dir .. "/" .. path
 
-            --local trimmed = string.Replace( truePath, ".mp3", "" )
-            --if string.find( trimmed, ".", nil, true ) then print( truePath ) end
-
             table.insert( jermSounds[dir], truePath )
             count = count + 1
 
@@ -116,6 +132,176 @@ local function randomJermSoundPath( directory )
 end
 
 local CurTime = CurTime
+local upReallyHigh = Vector( 0, 0, 2000 )
+
+function ENT:PrepareStrike( enemy, allies )
+    local cur = CurTime()
+
+    local strikeGroup = table.Copy( allies )
+    table.insert( strikeGroup, self )
+
+    local graceEnd = cur + 20
+    local strikeEnd = cur + 90 + #strikeGroup
+
+    for _, striker in ipairs( strikeGroup ) do
+        if not IsValid( striker ) then continue end
+        if striker.jerminator_NextCoordinatedStrike and striker.jerminator_NextCoordinatedStrike > cur then continue end
+        striker.jerminator_NextCoordinatedStrike = strikeEnd
+        striker.jerminator_CoordinatedStrikeWaiting = true
+        striker.terminator_DontImmiediatelyFire = cur + 0.5
+        striker:Anger( math.random( 1, 5 ) )
+
+    end
+    self:ReallyAnger( 5 )
+
+    local vibe = 0
+    local killerVibe = 15
+    local strikeTarget = enemy
+    local startingKiller = enemy.isTerminatorHunterKiller or 0
+
+    local timerName = "jerminator_coordinatestrike_" .. self:GetCreationID()
+    timer.Create( timerName, 0.2, 0, function()
+        if not IsValid( self ) then timer.Remove( timerName ) return end
+        local validTarg = IsValid( enemy )
+        if strikeEnd < CurTime() then -- waited too long, JUST KILL THEM!
+            timer.Remove( timerName )
+            for _, striker in ipairs( strikeGroup ) do
+                if not IsValid( striker ) then continue end
+                striker.jerminator_NextCoordinatedStrike = CurTime() + 60 + #strikeGroup
+                striker.jerminator_CoordinatedStrikeWaiting = nil
+                striker:ReallyAnger( 60 )
+
+            end
+            return
+
+        end
+        if validTarg and graceEnd > CurTime() then -- wait for grace to end
+            for _, striker in ipairs( strikeGroup ) do
+                if not IsValid( striker ) then continue end
+
+                local currEnemy = striker:GetEnemy()
+                if striker.IsSeeEnemy and currEnemy == strikeTarget then
+                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+
+                end
+            end
+            return
+
+        end
+
+        local STRIKE = false
+        local validCount = 0
+        local validSee = 0
+        local validHasEnemy = 0
+        local oneThinksBoxed
+        local vibeAdded = 1
+        local behindEnemy = 0
+
+        if validTarg then
+            local start = strikeTarget:GetShootPos()
+            local trStruc = {
+                start = start,
+                endpos = start + upReallyHigh,
+                mask = MASK_SOLID_BRUSHONLY,
+
+            }
+
+            local skyResult = util.TraceLine( trStruc )
+            local underSky = skyResult.HitSky or not skyResult.Hit
+            if not underSky then -- strike if enemy goes in a building
+                STRIKE = true
+                vibeAdded = vibeAdded + 1
+
+            end
+        end
+
+        if validTarg and not STRIKE then
+            for _, striker in ipairs( strikeGroup ) do -- figure out if we should strike
+                if not IsValid( striker ) then continue end
+                validCount = validCount + 1
+
+                local currEnemy = striker:GetEnemy()
+
+                if striker.IsSeeEnemy and currEnemy == strikeTarget then
+                    validSee = validSee + 1
+                    validHasEnemy = validHasEnemy + 1
+                    oneThinksBoxed = oneThinksBoxed or striker:EnemyIsBoxedIn()
+                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+                    local enemBearingToMe = self:enemyBearingToMeAbs()
+                    if enemBearingToMe > 90 then
+                        behindEnemy = behindEnemy + 1
+
+                    end
+
+                elseif IsValid( currEnemy ) and currEnemy == enemy then
+                    validHasEnemy = validHasEnemy + 1
+                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+
+                end
+            end
+        end
+
+        if not validTarg or ( strikeTarget.Alive and not strikeTarget:Alive() ) or ( validHasEnemy <= 0 and vibe <= 0 ) then -- fail condition
+            timer.Remove( timerName )
+            for _, striker in ipairs( strikeGroup ) do
+                if not IsValid( striker ) then continue end
+                striker.jerminator_NextCoordinatedStrike = nil
+                striker.jerminator_CoordinatedStrikeWaiting = nil
+
+            end
+            return
+
+        end
+
+        if oneThinksBoxed then
+            if behindEnemy >= 1 then
+                vibeAdded = vibeAdded + 1
+
+            end
+            vibeAdded = vibeAdded + 1
+            STRIKE = true
+
+        elseif not STRIKE then
+            local ratioNeeded = 0.75
+            STRIKE = validSee >= validCount * ratioNeeded
+
+        end
+
+        if validTarg and strikeTarget.isTerminatorHunterKiller and enemy.isTerminatorHunterKiller > startingKiller then
+            STRIKE = true
+            vibeAdded = vibeAdded * 10
+
+        end
+
+        if STRIKE then -- dont just strike instantly
+            vibe = vibe + 1
+            if vibe >= killerVibe then
+                timer.Remove( timerName )
+                for _, striker in ipairs( strikeGroup ) do
+                    if not IsValid( striker ) then continue end
+                    if not striker.jerminator_NextCoordinatedStrike then continue end
+                    striker.jerminator_NextCoordinatedStrike = math.max( striker.jerminator_NextCoordinatedStrike, CurTime() + 60 + #strikeGroup )
+                    striker.jerminator_CoordinatedStrikeWaiting = nil
+                    striker:ReallyAnger( 35 )
+                    striker:KillAllTasksWith( "movement" )
+                    striker:StartTask2( "movement_followenemy", nil, "killer vibes!" )
+                    striker.forcedShouldWalk = 0
+
+                end
+            else
+                for _, striker in ipairs( strikeGroup ) do
+                    if not IsValid( striker ) then continue end
+                    if striker.IsSeeEnemy then continue end
+                    striker:Anger( math.random( 1, 5 ) )
+
+                end
+            end
+        elseif vibe > 0 then
+            vibe = math.max( vibe - 0.08, 0 )
+
+        end
+    end )
+end
 
 -- groups of jermas have special logic that keeps them from attacking outright
 function ENT:EnemyIsLethalInMelee()
@@ -127,9 +313,9 @@ function ENT:EnemyIsLethalInMelee()
 
     local nextStrike = self.jerminator_NextCoordinatedStrike or 0
 
-    if nextStrike > cur then
+    if nextStrike > cur then -- doing strike
         if self.jerminator_CoordinatedStrikeWaiting then
-            return true
+            return self.IsSeeEnemy
 
         else
             return false
@@ -148,142 +334,22 @@ function ENT:EnemyIsLethalInMelee()
 
         prepareStrike = meetConditions
 
+    else
+        prepareStrike = false
+
     end
 
     if prepareStrike then -- group of jermas, we hold back THEN STRIKE ALL AT ONCE!
-        local graceEnd = cur + 20
-        local strikeEnd = cur + 120
+        self:PrepareStrike( enemy, allies )
 
-        local strikeGroup = table.Copy( allies )
-        table.insert( strikeGroup, self )
-
-        for _, striker in ipairs( strikeGroup ) do
-            if not IsValid( striker ) then continue end
-            if striker.jerminator_NextCoordinatedStrike and striker.jerminator_NextCoordinatedStrike > cur then continue end
-            striker.jerminator_NextCoordinatedStrike = strikeEnd
-            striker.jerminator_CoordinatedStrikeWaiting = true
-            striker.terminator_DontImmiediatelyFire = cur + 0.5
-            striker:Anger( math.random( 1, 5 ) )
-
-        end
-        self:ReallyAnger( 5 )
-
-        local vibe = 0
-        local killerVibe = 15
-        local strikeTarget = enemy
-
-        local timerName = "jerminator_coordinatestrike_" .. self:GetCreationID()
-        timer.Create( timerName, 0.2, 0, function()
-            if not IsValid( self ) then timer.Remove( timerName ) return end
-            if strikeEnd < CurTime() then -- waited too long, JUST KILL THEM!
-                timer.Remove( timerName )
-                for _, striker in ipairs( strikeGroup ) do
-                    if not IsValid( striker ) then continue end
-                    striker.jerminator_NextCoordinatedStrike = Curtime() + 60
-                    striker.jerminator_CoordinatedStrikeWaiting = nil
-                    striker:ReallyAnger( 60 )
-
-                end
-                return
-
-            end
-            if graceEnd > CurTime() then -- wait for grace to end
-                for _, striker in ipairs( strikeGroup ) do
-                    if not IsValid( striker ) then continue end
-
-                    local currEnemy = striker:GetEnemy()
-                    if striker.IsSeeEnemy and currEnemy == strikeTarget then
-                        striker.terminator_DontImmiediatelyFire = cur + 0.5
-
-                    end
-                end
-                return
-
-            end
-
-            local STRIKE = false
-            local validCount = 0
-            local validSee = 0
-            local validHasEnemy = 0
-            local oneThinksBoxed
-
-            for _, striker in ipairs( strikeGroup ) do -- figure out if we should strike
-                if not IsValid( striker ) then continue end
-                validCount = validCount + 1
-
-                local currEnemy = striker:GetEnemy()
-
-                if striker.IsSeeEnemy and currEnemy == strikeTarget then
-                    validSee = validSee + 1
-                    validHasEnemy = validHasEnemy + 1
-                    oneThinksBoxed = oneThinksBoxed or striker:EnemyIsBoxedIn()
-                    striker.terminator_DontImmiediatelyFire = cur + 0.5
-
-                elseif IsValid( currEnemy ) and currEnemy == enemy then
-                    validHasEnemy = validHasEnemy + 1
-                    striker.terminator_DontImmiediatelyFire = cur + 0.5
-
-                end
-            end
-
-            if not strikeTarget:Alive() or ( validHasEnemy <= 0 and vibe <= 0 ) then -- fail condition
-                timer.Remove( timerName )
-                for _, striker in ipairs( strikeGroup ) do
-                    if not IsValid( striker ) then continue end
-                    striker.jerminator_NextCoordinatedStrike = nil
-                    striker.jerminator_CoordinatedStrikeWaiting = nil
-
-                end
-                return
-
-            end
-
-            local vibeAdded = 1
-            if oneThinksBoxed then
-                vibeAdded = vibeAdded + 1
-                STRIKE = true
-
-            else
-                local ratioNeeded = 0.75
-                STRIKE = validSee >= validCount * ratioNeeded
-
-            end
-
-            if STRIKE then -- dont just strike instantly
-                vibe = vibe + 1
-                if vibe >= killerVibe then
-                    timer.Remove( timerName )
-                    for _, striker in ipairs( strikeGroup ) do
-                        if not IsValid( striker ) then continue end
-                        striker.jerminator_NextCoordinatedStrike = math.max( striker.jerminator_NextCoordinatedStrike, CurTime() + 60 )
-                        striker.jerminator_CoordinatedStrikeWaiting = nil
-                        striker:ReallyAnger( 35 )
-                        striker.forcedShouldWalk = 0
-
-                    end
-                else
-                    for _, striker in ipairs( strikeGroup ) do
-                        if not IsValid( striker ) then continue end
-                        if striker.IsSeeEnemy then continue end
-                        striker:Anger( math.random( 1, 5 ) )
-
-                    end
-                end
-            elseif vibe > 0 then
-                vibe = math.max( vibe - 0.08, 0 )
-
-            end
-
-        end )
-
-        return true
+        return self.IsSeeEnemy
 
     elseif inAGroup then
         if enemyIsWeak then
             return BaseClass.EnemyIsLethalInMelee( self )
 
         else
-            return true
+            return self.IsSeeEnemy
 
         end
     else
