@@ -133,6 +133,7 @@ end
 
 local CurTime = CurTime
 local upReallyHigh = Vector( 0, 0, 2000 )
+local strikeInterval = 120
 
 function ENT:PrepareStrike( enemy, allies )
     local cur = CurTime()
@@ -155,7 +156,7 @@ function ENT:PrepareStrike( enemy, allies )
     self:ReallyAnger( 5 )
 
     local vibe = 0
-    local killerVibe = 15
+    local killerVibe = 12
     local strikeTarget = enemy
     local startingKiller = enemy.isTerminatorHunterKiller or 0
 
@@ -167,7 +168,7 @@ function ENT:PrepareStrike( enemy, allies )
             timer.Remove( timerName )
             for _, striker in ipairs( strikeGroup ) do
                 if not IsValid( striker ) then continue end
-                striker.jerminator_NextCoordinatedStrike = CurTime() + 60 + #strikeGroup
+                striker.jerminator_NextCoordinatedStrike = CurTime() + strikeInterval + #strikeGroup
                 striker.jerminator_CoordinatedStrikeWaiting = nil
                 striker:ReallyAnger( 60 )
 
@@ -245,7 +246,7 @@ function ENT:PrepareStrike( enemy, allies )
             timer.Remove( timerName )
             for _, striker in ipairs( strikeGroup ) do
                 if not IsValid( striker ) then continue end
-                striker.jerminator_NextCoordinatedStrike = nil
+                striker.jerminator_NextCoordinatedStrike = math.max( striker.jerminator_NextCoordinatedStrike, CurTime() + strikeInterval + #strikeGroup )
                 striker.jerminator_CoordinatedStrikeWaiting = nil
 
             end
@@ -280,7 +281,7 @@ function ENT:PrepareStrike( enemy, allies )
                 for _, striker in ipairs( strikeGroup ) do
                     if not IsValid( striker ) then continue end
                     if not striker.jerminator_NextCoordinatedStrike then continue end
-                    striker.jerminator_NextCoordinatedStrike = math.max( striker.jerminator_NextCoordinatedStrike, CurTime() + 60 + #strikeGroup )
+                    striker.jerminator_NextCoordinatedStrike = math.max( striker.jerminator_NextCoordinatedStrike, CurTime() + strikeInterval + #strikeGroup )
                     striker.jerminator_CoordinatedStrikeWaiting = nil
                     striker:ReallyAnger( 35 )
                     striker:KillAllTasksWith( "movement" )
@@ -327,7 +328,7 @@ function ENT:EnemyIsLethalInMelee()
     local prepareStrike = inAGroup and nextStrike < cur
     local enemyIsWeak = enemy.Health and enemy:Health() <= enemy:GetMaxHealth() * 0.75
 
-    if prepareStrike and #allies >= 3 and enemy:IsPlayer() then
+    if prepareStrike and #allies >= 6 and enemy:IsPlayer() then
         local meetConditions = enemyIsWeak
         meetConditions = meetConditions or self:Health() <= self:GetMaxHealth() * 0.5
         meetConditions = meetConditions or self:EnemyIsBoxedIn()
