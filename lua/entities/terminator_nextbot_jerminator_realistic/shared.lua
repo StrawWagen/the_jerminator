@@ -278,15 +278,19 @@ function ENT:PrepareStrike( enemy, allies )
             vibe = vibe + 1
             if vibe >= killerVibe then
                 timer.Remove( timerName )
-                for _, striker in ipairs( strikeGroup ) do
+                for index, striker in ipairs( strikeGroup ) do
                     if not IsValid( striker ) then continue end
                     if not striker.jerminator_NextCoordinatedStrike then continue end
                     striker.jerminator_NextCoordinatedStrike = math.max( striker.jerminator_NextCoordinatedStrike, CurTime() + strikeInterval + #strikeGroup )
                     striker.jerminator_CoordinatedStrikeWaiting = nil
                     striker:ReallyAnger( 35 )
-                    striker:KillAllTasksWith( "movement" )
-                    striker:StartTask2( "movement_followenemy", nil, "killer vibes!" )
-                    striker.forcedShouldWalk = 0
+                    timer.Simple( 0 + index * 0.1, function()
+                        if not IsValid( striker ) then return end
+                        striker:KillAllTasksWith( "movement" )
+                        striker:StartTask2( "movement_followenemy", nil, "killer vibes!" )
+                        striker.forcedShouldWalk = 0
+
+                    end )
 
                 end
             else
