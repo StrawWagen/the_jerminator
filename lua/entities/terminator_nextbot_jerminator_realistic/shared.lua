@@ -141,7 +141,7 @@ function ENT:PrepareStrike( enemy, allies )
     local strikeGroup = table.Copy( allies )
     table.insert( strikeGroup, self )
 
-    local graceEnd = cur + 20
+    local graceEnd = cur + 15
     local strikeEnd = cur + 90 + #strikeGroup
 
     for _, striker in ipairs( strikeGroup ) do
@@ -197,6 +197,8 @@ function ENT:PrepareStrike( enemy, allies )
         local oneThinksBoxed
         local vibeAdded = 1
         local behindEnemy = 0
+        local lostHealth = 0
+        local nearestDist = math.huge
 
         if validTarg then
             local start = strikeTarget:GetShootPos()
@@ -216,18 +218,24 @@ function ENT:PrepareStrike( enemy, allies )
             end
         end
 
-        if validTarg and not STRIKE then
+        if validTarg then
             for _, striker in ipairs( strikeGroup ) do -- figure out if we should strike
                 if not IsValid( striker ) then continue end
                 validCount = validCount + 1
 
                 local currEnemy = striker:GetEnemy()
 
-                if striker.IsSeeEnemy and currEnemy == strikeTarget then
+                if striker.IsSeeEnemy and currEnemy == strikeTarget then -- strike if enemy is boxed in, or if most of the group can see the enemy
+                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+
                     validSee = validSee + 1
                     validHasEnemy = validHasEnemy + 1
                     oneThinksBoxed = oneThinksBoxed or striker:EnemyIsBoxedIn()
-                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+
+                    lostHealth = lostHealth + striker:getLostHealth()
+
+                    nearestDist = math.min( nearestDist, striker.DistToEnemy )
+
                     local enemBearingToMe = self:enemyBearingToMeAbs()
                     if enemBearingToMe > 90 then
                         behindEnemy = behindEnemy + 1
@@ -254,11 +262,7 @@ function ENT:PrepareStrike( enemy, allies )
 
         end
 
-        if oneThinksBoxed then
-            if behindEnemy >= 1 then
-                vibeAdded = vibeAdded + 1
-
-            end
+        if oneThinksBoxed or lostHealth > 100 then
             vibeAdded = vibeAdded + 1
             STRIKE = true
 
@@ -274,6 +278,19 @@ function ENT:PrepareStrike( enemy, allies )
 
         end
 
+        if nearestDist < 200 and not STRIKE then
+            STRIKE = true
+
+        elseif nearestDist < 400 then
+            vibeAdded = vibeAdded + 1
+
+        end
+
+        if behindEnemy >= 1 then
+            vibeAdded = vibeAdded * 2
+
+        end
+
         if STRIKE then -- dont just strike instantly
             vibe = vibe + 1
             if vibe >= killerVibe then
@@ -283,7 +300,7 @@ function ENT:PrepareStrike( enemy, allies )
                     if not striker.jerminator_NextCoordinatedStrike then continue end
                     striker.jerminator_NextCoordinatedStrike = math.max( striker.jerminator_NextCoordinatedStrike, CurTime() + strikeInterval + #strikeGroup )
                     striker.jerminator_CoordinatedStrikeWaiting = nil
-                    striker:ReallyAnger( 35 )
+                    striker:ReallyAnger( 60 )
                     timer.Simple( 0 + index * 0.1, function()
                         if not IsValid( striker ) then return end
                         striker:KillAllTasksWith( "movement" )
@@ -291,8 +308,8 @@ function ENT:PrepareStrike( enemy, allies )
                         striker.forcedShouldWalk = 0
 
                     end )
-
                 end
+                return
             else
                 for _, striker in ipairs( strikeGroup ) do
                     if not IsValid( striker ) then continue end
@@ -323,18 +340,27 @@ function ENT:EnemyIsLethalInMelee()
             return self.IsSeeEnemy
 
         else
+            if enemy:IsPlayer() and enemy:Health() <= 0 then
+                self.jerminator_DoneWithStrikes = true
+
+            end
             return false
 
         end
+    end
+
+    if self.jerminator_DoneWithStrikes then
+        return BaseClass.EnemyIsLethalInMelee( self )
+
     end
 
     local inAGroup = #allies >= 1
     local prepareStrike = inAGroup and nextStrike < cur
     local enemyIsWeak = enemy.Health and enemy:Health() <= enemy:GetMaxHealth() * 0.75
 
-    if prepareStrike and #allies >= 6 and enemy:IsPlayer() then
+    if prepareStrike and inAGroup and enemy:IsPlayer() then
         local meetConditions = enemyIsWeak
-        meetConditions = meetConditions or self:Health() <= self:GetMaxHealth() * 0.5
+        meetConditions = meetConditions or self.IsSeeEnemy and self:Health() <= self:GetMaxHealth() * 0.9
         meetConditions = meetConditions or self:EnemyIsBoxedIn()
 
         prepareStrike = meetConditions
@@ -351,6 +377,9 @@ function ENT:EnemyIsLethalInMelee()
 
     elseif inAGroup then
         if enemyIsWeak then
+            return BaseClass.EnemyIsLethalInMelee( self )
+
+        elseif self:getLostHealth() <= 0 and not self:IsAngry() then
             return BaseClass.EnemyIsLethalInMelee( self )
 
         else
