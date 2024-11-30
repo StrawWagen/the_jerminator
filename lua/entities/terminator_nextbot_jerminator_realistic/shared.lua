@@ -580,7 +580,7 @@ function ENT:DoCustomTasks( defaultTasks )
 
                 end
 
-                if data.jerminator_MatState and self:GetMaterial() ~= data.jerminator_MatState then
+                if data.jerminator_MatState and self:GetMaterial() ~= data.jerminator_MatState and self:IsSolid() then
                     self:SetMaterial( data.jerminator_MatState )
 
                 end
