@@ -13,12 +13,6 @@ if CLIENT then
     language.Add( className, SWEP.PrintName )
     killicon.Add( className, "vgui/hud/killicon/" .. className .. ".png", color_white )
 
-else
-    local doFastDl = CreateConVar( "jerminator_fastdlkillicon", 1, { FCVAR_ARCHIVE }, "Toggle the killicon fastdl." )
-    if doFastDl:GetBool() then
-        resource.AddFile( "materials/vgui/hud/killicon/" .. className .. ".png" )
-
-    end
 end
 
 function SWEP:HoldTypeThink()
