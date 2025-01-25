@@ -30,7 +30,7 @@ if CLIENT then
 
         steamworks.DownloadUGC( "3330585475", function( path )
             if not path then return end
-            gotContent = true
+            gotContent = game.MountGMA( path )
 
         end )
     end
