@@ -16,6 +16,24 @@ list.Set( "NPC", "terminator_nextbot_jerminator_realistic", {
 
 if CLIENT then
     language.Add( "terminator_nextbot_jerminator_realistic", ENT.PrintName )
+
+    local contentVar = GetConVar( "jerminator_dynamic_content" )
+    local gotContent
+    local attempts = 0
+
+    function ENT:AdditionalClientInitialize() -- people who join in with this already spawned are screwed lol
+        if not contentVar:GetBool() then return end
+        if gotContent then return end
+
+        if attempts > 10 then return end -- just in case
+        attempts = attempts + 1
+
+        steamworks.DownloadUGC( "3330585475", function( path )
+            if not path then return end
+            gotContent = true
+
+        end )
+    end
     return
 
 end
