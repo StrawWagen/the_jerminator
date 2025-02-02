@@ -37,6 +37,7 @@ ENT.JumpHeight = 70 * 1.5
 ENT.FistDamageMul = 1
 ENT.ThrowingForceMul = 1
 ENT.SpawnHealth = 200
+ENT.MyPhysicsMass = 150
 
 ENT.FootstepClomping = false
 ENT.duelEnemyTimeoutMul = 5

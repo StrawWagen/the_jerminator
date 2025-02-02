@@ -61,8 +61,6 @@ function ENT:CanWeaponPrimaryAttack()
 
 end
 
-local upOffs = Vector( 0, 0, 10 )
-
 function ENT:DoHiding( hide )
     local oldHide = not self:IsSolid()
     if hide == oldHide then return end
