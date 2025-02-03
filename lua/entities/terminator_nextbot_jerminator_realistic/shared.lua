@@ -25,10 +25,10 @@ if CLIENT then
     function ENT:AdditionalClientInitialize() -- people who join in with this already spawned are screwed lol
         if not contentVar:GetBool() then return end
 
-        if attempts > 10 then return end -- just in case
+        if attempts >= 4 then return end -- just in case
 
         if not gotBOTContent then
-            attempts = attempts + 0.5
+            attempts = attempts + 1
             steamworks.DownloadUGC( "3330585475", function( path )
                 if not path then return end
                 gotBOTContent = game.MountGMA( path )
@@ -36,7 +36,7 @@ if CLIENT then
             end )
         end
         if not gotPMContent then
-            attempts = attempts + 0.5
+            attempts = attempts + 1
             steamworks.DownloadUGC( "2691974423", function( path )
                 if not path then return end
                 gotPMContent = game.MountGMA( path )
