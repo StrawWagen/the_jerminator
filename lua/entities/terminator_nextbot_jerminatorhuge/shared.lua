@@ -50,7 +50,7 @@ ENT.JumpHeight = 70 * 8
 ENT.ThrowingForceMul = 10
 ENT.FistDamageMul = 6
 
-ENT.term_CanHolsterWeapons = false -- holstering breaks on big modelscales :(
+ENT.CanHolsterWeapons = false -- holstering breaks on big modelscales :(
 
 function ENT:AdditionalInitialize()
     BaseClass.AdditionalInitialize( self )
