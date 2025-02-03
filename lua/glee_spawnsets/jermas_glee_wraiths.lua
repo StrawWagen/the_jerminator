@@ -11,6 +11,7 @@ local jermaSpawnSet = {
     spawnCountPerDifficulty = "default", -- max of ten at 10 minutes
     startingSpawnCount = "default",
     maxSpawnCount = "default",
+    maxSpawnDist = "default",
     spawns = {
         {
             name = "jerma_98SIX",
