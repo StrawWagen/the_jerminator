@@ -12,6 +12,8 @@ local jermaSpawnSet = {
     startingSpawnCount = "default",
     maxSpawnCount = "default",
     maxSpawnDist = "default",
+    roundEndSound = "default",
+    roundStartSound = "default",
     spawns = {
         {
             name = "jerma_98SIX",
@@ -21,7 +23,6 @@ local jermaSpawnSet = {
             difficultyCost = { 5, 10 },
             countClass = "terminator_nextbot_jerminatorwraith",
             minCount = { 2 },
-            maxCount = { 10 },
             postSpawnedFuncs = nil,
         },
     }
