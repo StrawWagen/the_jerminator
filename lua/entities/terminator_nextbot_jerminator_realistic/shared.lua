@@ -67,6 +67,7 @@ ENT.HealthRegenInterval = 0.5
 
 ENT.MetallicMoveSounds = false
 ENT.DoMetallicDamage = false
+ENT.term_CanSwim = true
 
 function ENT:AdditionalInitialize()
     self.isTerminatorHunterChummy = "jerminator"
