@@ -15,45 +15,58 @@ if CLIENT then
 
 end
 
-function SWEP:HoldTypeThink()
-    local owner = self:GetOwner()
-    if not IsValid( owner ) then return end
-    if not owner.GetEnemy then return end
-    local enemy = owner:GetEnemy()
-    local holdType = "normal"
-    local doFistsTime = self.doFistsTime
+local entMeta = FindMetaTable( "Entity" )
 
-    local path = owner:GetPath()
+function SWEP:HoldTypeThink()
+    local owner = entMeta.GetOwner( self )
+    if not IsValid( owner ) then return end
+
+    local myTbl = entMeta.GetTable( self )
+    local ownerTbl = entMeta.GetTable( owner )
+    if not ownerTbl.GetEnemy then return end
+
+    local enemy = ownerTbl.GetEnemy( owner )
+    local validEnemy
+    local enemyTbl
+    if IsValid( enemy ) then
+        validEnemy = true
+        enemyTbl = entMeta.GetTable( enemy )
+
+    end
+    local holdType = "normal"
+    local doFistsTime = myTbl.doFistsTime
+
+    local path = ownerTbl.GetPath( owner )
 
     if doFistsTime > CurTime() then
         holdType = "fist"
 
-    elseif owner:IsReallyAngry() then
+    elseif ownerTbl.IsReallyAngry( owner ) then
         holdType = "fist"
 
-    elseif IsValid( enemy ) and enemy.isTerminatorHunterKiller then
-        holdType = "fist"
-        doFistsTime = math.max( doFistsTime, CurTime() + 10 )
-
-    elseif IsValid( enemy ) and owner.DistToEnemy and owner.DistToEnemy < self.Range * 4 then
-        holdType = "fist"
-
-    elseif owner:getLostHealth() > 0.01 then
+    elseif validEnemy and enemyTbl.isTerminatorHunterKiller then
         holdType = "fist"
         doFistsTime = math.max( doFistsTime, CurTime() + 10 )
 
-    elseif IsValid( enemy ) and path and path:GetEnd() and path:GetEnd():DistToSqr( enemy:GetPos() ) < 1000^2 and path:GetLength() < 1000 then
+    elseif validEnemy and ownerTbl.DistToEnemy and ownerTbl.DistToEnemy < myTbl.Range * 4 then
+        holdType = "fist"
+
+    elseif ownerTbl.getLostHealth( owner ) > 0.01 then
+        holdType = "fist"
+        doFistsTime = math.max( doFistsTime, CurTime() + 10 )
+
+    elseif validEnemy and path and path:GetEnd() and path:GetEnd():DistToSqr( enemy:GetPos() ) < 1000^2 and path:GetLength() < 1000 then
         holdType = "fist"
         doFistsTime = math.max( doFistsTime, CurTime() + 3 )
 
     end
 
-    self.doFistsTime = doFistsTime
-    local oldHoldType = self.oldHoldType
+    myTbl.doFistsTime = doFistsTime
+    local oldHoldType = myTbl.oldHoldType
 
     if not oldHoldType or oldHoldType ~= holdType then
         self:SetHoldType( holdType )
-        self.oldHoldType = holdType
+        myTbl.oldHoldType = holdType
 
     end
 end
