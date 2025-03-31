@@ -2,7 +2,7 @@
 local newEvent = {
     defaultPercentChancePerMin = 0.1,
 
-    dedicationInfoNum = "cl_jerminator_familiarity",
+    doesDedicationProgression = true,
     navmeshEvent = true,
     variants = {
         {
@@ -10,13 +10,13 @@ local newEvent = {
             getIsReadyFunc = nil,
             minDedication = 0,
             maxDedication = 4,
-            overrideChance = 25, -- chance to override other events
+            overrideChance = 25, -- chance to override other events, this goes from top to bottom
             unspawnedStuff = {
                 {
                     class = "terminator_nextbot_jerminator_scared",
                     spawnAlgo = "steppedRandomRadius",
                     deleteAfterMeet = true,
-                    timeout = nil, -- if bot has no enemy for this long, despawns em, defaults to 30 min
+                    timeout = true, -- if bot has no enemy for this long, despawns em, true means it sets to the default, 30 min
 
                 }
             },
@@ -34,7 +34,7 @@ local newEvent = {
                     class = "terminator_nextbot_jerminator",
                     spawnAlgo = "steppedRandomRadius",
                     deleteAfterMeet = true,
-                    timeout = nil,
+                    timeout = true,
 
                 },
             },
@@ -52,7 +52,7 @@ local newEvent = {
                     class = "terminator_nextbot_jerminator",
                     spawnAlgo = "steppedRandomRadius",
                     scout = true, -- halts the spawning until this guy sees an enemy
-                    timeout = nil,
+                    timeout = true,
 
                 },
                 {
@@ -76,7 +76,7 @@ local newEvent = {
                     class = "terminator_nextbot_jerminator",
                     spawnAlgo = "steppedRandomRadius",
                     scout = true,
-                    timeout = nil,
+                    timeout = true,
 
                 },
                 {
@@ -100,7 +100,7 @@ local newEvent = {
                     class = "terminator_nextbot_jerminator",
                     spawnAlgo = "steppedRandomRadius",
                     scout = true,
-                    timeout = nil,
+                    timeout = true,
 
                 },
                 {
@@ -174,7 +174,7 @@ local newEvent = {
                     class = "terminator_nextbot_jerminator_realistic",
                     spawnAlgo = "steppedRandomRadius",
                     scout = true,
-                    timeout = nil,
+                    timeout = true,
 
                 },
                 {
