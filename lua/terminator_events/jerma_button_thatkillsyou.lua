@@ -11,7 +11,7 @@ local newEvent = {
                 {
                     class = "the_button_that_kills_you",
                     spawnAlgo = "steppedRandomRadius",
-                    timeout = nil, -- defaults to 30 min
+                    timeout = nil,  -- no timeout since this will dissapear even if someone finds it rn
 
                 }
             },
