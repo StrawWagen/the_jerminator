@@ -81,6 +81,7 @@ function ENT:DoHiding( hide )
         local toApply = { self }
         table.Add( toApply, self:GetChildren() )
         for _, ent in pairs( toApply ) do
+            if not IsValid( ent ) then continue end
             ent:DrawShadow( false )
             ent:SetNotSolid( true )
 
