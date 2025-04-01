@@ -82,6 +82,8 @@ function ENT:DoHiding( hide )
         table.Add( toApply, self:GetChildren() )
         for _, ent in pairs( toApply ) do
             if not IsValid( ent ) then continue end
+            local entsParent = ent:GetParent()
+            if not IsValid( entsParent ) or entsParent ~= self then continue end
             ent:DrawShadow( false )
             ent:SetNotSolid( true )
 
@@ -106,6 +108,8 @@ function ENT:DoHiding( hide )
             table.Add( toApply, self:GetChildren() )
             for _, ent in pairs( toApply ) do
                 if not IsValid( ent ) then continue end
+                local entsParent = ent:GetParent()
+                if not IsValid( entsParent ) or entsParent ~= self then continue end
                 ent:DrawShadow( true )
                 ent:SetMaterial( "" )
                 ent:SetNotSolid( false )
