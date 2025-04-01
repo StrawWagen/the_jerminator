@@ -25,6 +25,10 @@ function ENT:CloakedMatFlicker()
     local toApply = { self }
     table.Add( toApply, self:GetChildren() )
     for _, ent in pairs( toApply ) do
+        if not IsValid( ent ) then continue end
+        local entsParent = ent:GetParent()
+        if not IsValid( entsParent ) or entsParent ~= self then continue end
+
         if IsValid( ent ) then
             ent:SetMaterial( "effects/combineshield/comshieldwall3" )
 
@@ -36,6 +40,10 @@ function ENT:CloakedMatFlicker()
         toApply = { self }
         table.Add( toApply, self:GetChildren() )
         for _, ent in pairs( toApply ) do
+            if not IsValid( ent ) then continue end
+            local entsParent = ent:GetParent()
+            if not IsValid( entsParent ) or entsParent ~= self then continue end
+
             if IsValid( ent ) then
                 ent:SetMaterial( "effects/combineshield/comshieldwall" )
 
