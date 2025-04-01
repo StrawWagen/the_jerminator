@@ -3,7 +3,7 @@ AddCSLuaFile()
 
 ENT.Base = "terminator_nextbot_jerminator_realistic"
 DEFINE_BASECLASS( ENT.Base )
-ENT.PrintName = "Jerma"
+ENT.PrintName = "Jerma987"
 ENT.Spawnable = false
 list.Set( "NPC", "terminator_nextbot_jerminatorhuge", {
     Name = "Jerma987",
@@ -39,11 +39,14 @@ ENT.DefaultStepHeight = 18
 ENT.StandingStepHeight = ENT.DefaultStepHeight * 2.25 -- used in crouch toggle in motionoverrides
 ENT.CrouchingStepHeight = ENT.DefaultStepHeight * 1
 ENT.StepHeight = ENT.StandingStepHeight
+ENT.PathGoalToleranceFinal = 100
 ENT.AimSpeed = 480
-ENT.WalkSpeed = 100
-ENT.MoveSpeed = 250
+ENT.CrouchSpeed = 200
+ENT.WalkSpeed = 200
+ENT.MoveSpeed = 300
 ENT.RunSpeed = 800 -- bit FASTER
-ENT.AccelerationSpeed = 1250 -- slow accel
+ENT.TERM_WEAPON_PROFICIENCY = WEAPON_PROFICIENCY_AVERAGE
+ENT.AccelerationSpeed = 1150 -- slow accel
 ENT.DuelEnemyDist = 750
 
 ENT.JumpHeight = 70 * 8

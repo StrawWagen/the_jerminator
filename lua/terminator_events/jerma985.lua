@@ -133,8 +133,8 @@ local newEvent = {
         {
             variantName = "chanceJerma98SIXMeeting", -- rare early invis one
             getIsReadyFunc = nil,
-            minDedication = 8,
-            maxDedication = 28,
+            minDedication = 10,
+            maxDedication = 40,
             overrideChance = 2,
             unspawnedStuff = {
                 {
@@ -148,10 +148,26 @@ local newEvent = {
             concludeOnMeet = true,
         },
         {
-            variantName = "jerma985Meeting",
+            variantName = "chanceJerma98SEVENMeeting", -- rare early big guy
             getIsReadyFunc = nil,
             minDedication = 10,
             maxDedication = 40,
+            overrideChance = 2,
+            unspawnedStuff = {
+                {
+                    class = "terminator_nextbot_jerminatorhuge",
+                    spawnAlgo = "steppedRandomRadius",
+                    deleteAfterMeet = true,
+
+                },
+            },
+            thinkInterval = nil,
+            concludeOnMeet = true,
+        },
+        {
+            variantName = "jerma985Meeting",
+            getIsReadyFunc = nil,
+            minDedication = 10,
             overrideChance = 40,
             unspawnedStuff = {
                 {
@@ -181,6 +197,68 @@ local newEvent = {
                     class = "terminator_nextbot_jerminator_realistic",
                     spawnAlgo = "teammateSpawn",
                     repeats = 1,
+
+                },
+            },
+            thinkInterval = nil,
+            concludeOnMeet = true,
+        },
+        {
+            variantName = "mediumScoutedJerma985GroupMeet",
+            getIsReadyFunc = nil,
+            minDedication = 20,
+            maxDedication = 60,
+            overrideChance = 25,
+            unspawnedStuff = {
+                {
+                    class = "terminator_nextbot_jerminator_realistic",
+                    spawnAlgo = "steppedRandomRadius",
+                    scout = true,
+                    timeout = true,
+
+                },
+                {
+                    class = "terminator_nextbot_jerminator_realistic",
+                    spawnAlgo = "teammateSpawn",
+                    repeats = 4,
+
+                },
+            },
+            thinkInterval = nil,
+            concludeOnMeet = true,
+        },
+        {
+            variantName = "jerma98SIXMeeting",
+            getIsReadyFunc = nil,
+            minDedication = 40,
+            overrideChance = 15,
+            unspawnedStuff = {
+                {
+                    class = "terminator_nextbot_jerminatorwraith",
+                    spawnAlgo = "steppedRandomRadius",
+
+                },
+            },
+            thinkInterval = nil,
+            concludeOnMeet = true,
+        },
+        {
+            variantName = "largeScoutedJerma985GroupMeet",
+            getIsReadyFunc = nil,
+            minDedication = 40,
+            overrideChance = 25,
+            unspawnedStuff = {
+                {
+                    class = "terminator_nextbot_jerminator_realistic",
+                    spawnAlgo = "steppedRandomRadius",
+                    scout = true,
+                    timeout = true,
+
+                },
+                {
+                    class = "terminator_nextbot_jerminator_realistic",
+                    spawnAlgo = "teammateSpawn",
+                    repeats = 8,
 
                 },
             },

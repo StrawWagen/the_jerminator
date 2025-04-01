@@ -5,6 +5,7 @@ DEFINE_BASECLASS( "base_gmodentity" )
 ENT.PrintName = "The Button that kills you."
 ENT.Spawnable = true
 ENT.Category = "Jerma985"
+ENT.AdminOnly = game.IsDedicated()
 ENT.Editable = true
 
 if CLIENT then
