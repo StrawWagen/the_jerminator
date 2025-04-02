@@ -27,7 +27,7 @@ function ENT:CloakedMatFlicker()
     for _, ent in pairs( toApply ) do
         if not IsValid( ent ) then continue end
         local entsParent = ent:GetParent()
-        if not IsValid( entsParent ) or entsParent ~= self then continue end
+        if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
 
         if IsValid( ent ) then
             ent:SetMaterial( "effects/combineshield/comshieldwall3" )
@@ -42,7 +42,7 @@ function ENT:CloakedMatFlicker()
         for _, ent in pairs( toApply ) do
             if not IsValid( ent ) then continue end
             local entsParent = ent:GetParent()
-            if not IsValid( entsParent ) or entsParent ~= self then continue end
+            if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
 
             if IsValid( ent ) then
                 ent:SetMaterial( "effects/combineshield/comshieldwall" )
@@ -91,7 +91,7 @@ function ENT:DoHiding( hide )
         for _, ent in pairs( toApply ) do
             if not IsValid( ent ) then continue end
             local entsParent = ent:GetParent()
-            if not IsValid( entsParent ) or entsParent ~= self then continue end
+            if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
             ent:DrawShadow( false )
             ent:SetNotSolid( true )
 
@@ -117,7 +117,7 @@ function ENT:DoHiding( hide )
             for _, ent in pairs( toApply ) do
                 if not IsValid( ent ) then continue end
                 local entsParent = ent:GetParent()
-                if not IsValid( entsParent ) or entsParent ~= self then continue end
+                if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
                 ent:DrawShadow( true )
                 ent:SetMaterial( "" )
                 ent:SetNotSolid( false )
