@@ -90,7 +90,7 @@ function ENT:Think()
     --
     if ( SERVER && self:GetPressed() ) then
 
-        if ( !IsValid( self.LastUser ) || !self.LastUser:KeyDown( IN_USE ) ) then
+        if ( not IsValid( self.LastUser ) || not self.LastUser:KeyDown( IN_USE ) ) then
 
             self:Toggle( false, self.LastUser )
             self.LastUser = nil
@@ -135,7 +135,7 @@ function ENT:UpdateLever()
 
 end
 
-if !SERVER then return end
+if not SERVER then return end
 
 ENT.Chunks = {
     "physics/body/body_medium_break2.wav",
@@ -147,19 +147,20 @@ ENT.Whaps = {
     "physics/body/body_medium_impact_hard2.wav",
     "physics/body/body_medium_impact_hard3.wav",
 }
+
 function ENT:KillYou( toKill )
     self:EmitSound( "plats/elevator_stop1.wav", 90, 120 )
     self:EmitSound( "buttons/button6.wav", 90, 120 )
     toKill.PressingTheButtonThatKillsYou = true
 
     timer.Simple( 0.5, function()
-        if !IsValid( self ) then return end
+        if not IsValid( self ) then return end
         self:EmitSound( "buttons/button8.wav", 90, 80 )
         util.ScreenShake( self:GetPos(), 6, 20, 1, 3000 )
 
     end )
     timer.Simple( 0.75, function()
-        if !IsValid( toKill ) then return end
+        if not IsValid( toKill ) then return end
         toKill.PressingTheButtonThatKillsYou = nil
         util.ScreenShake( toKill:GetPos(), 16, 20, 0.4, 3000 )
         util.ScreenShake( toKill:GetPos(), 1, 20, 2, 8000 )
@@ -177,7 +178,22 @@ function ENT:KillYou( toKill )
         dmgInfo:SetInflictor( killer )
         toKill:TakeDamageInfo( dmgInfo )
 
-        if !IsValid( self ) then return end
+        timer.Simple( 0, function()
+            if not IsValid( toKill ) then return end
+            if not toKill:IsPlayer() then return end
+            if not toKill:Alive() then return end
+
+            toKill:Kill()
+            timer.Simple( 0, function()
+                if not IsValid( toKill ) then return end
+                if not toKill:Alive() then return end
+
+                toKill:KillSilent()
+
+            end )
+        end )
+
+        if not IsValid( self ) then return end
         for _ = 1, 3 do
             toKill:EmitSound( table.Random( self.Chunks ), 100, math.random( 115, 120 ), 1, CHAN_STATIC )
             toKill:EmitSound( table.Random( self.Whaps ), 75, math.random( 115, 120 ), 1, CHAN_STATIC )
