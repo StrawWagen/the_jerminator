@@ -1,4 +1,8 @@
-RunConsoleCommand( "jerminator_dynamic_content", 1 )
+
+if game.IsDedicated() then
+    RunConsoleCommand( "jerminator_dynamic_content", 1 )
+
+end
 
 local jermaSpawnSet = {
     name = "jermas_glee", -- unique name
@@ -102,6 +106,28 @@ local jermaSpawnSet = {
             difficultyCost = { 50, 150 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 10 },
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = { 1, 4 },
+            name = "jerma_98EIGHT_rareearly",
+            prettyName = "A Jerma988",
+            class = "terminator_nextbot_jerminatorsmol",
+            spawnType = "hunter",
+            difficultyCost = { 25, 50 },
+            countClass = "terminator_nextbot_jerminatorsmol",
+            maxCount = { 1 },
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = { 10, 20 },
+            name = "jerma_98EIGHT_common",
+            prettyName = "A Jerma988",
+            class = "terminator_nextbot_jerminatorsmol",
+            spawnType = "hunter",
+            difficultyCost = { 10, 20 },
+            countClass = "terminator_nextbot_jerminator*",
+            maxCount = { 15 },
             postSpawnedFuncs = nil,
         },
     }

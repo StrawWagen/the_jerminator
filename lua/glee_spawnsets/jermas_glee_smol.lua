@@ -5,9 +5,9 @@ if game.IsDedicated() then
 end
 
 local jermaSpawnSet = {
-    name = "jermas_glee_wraith", -- unique name
-    prettyName = "Wraith Jermas",
-    description = "Lots of cloaking Jerma986",
+    name = "jermas_glee_smol", -- unique name
+    prettyName = "Vertically Challenged Jermas",
+    description = "Jerma, but his height is accurate to real life.",
     difficultyPerMin = "default", -- difficulty per minute
     waveInterval = "default", -- time between spawn waves
     diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
@@ -18,16 +18,27 @@ local jermaSpawnSet = {
     maxSpawnDist = "default",
     roundEndSound = "default",
     roundStartSound = "default",
-    chanceToBeVotable = 15,
+    chanceToBeVotable = 10,
     spawns = {
         {
-            name = "jerma_98SIX",
-            prettyName = "A Jerma986",
-            class = "terminator_nextbot_jerminatorwraith",
+            name = "jerma_98EIGHT",
+            prettyName = "A Jerma988",
+            class = "terminator_nextbot_jerminatorsmol",
             spawnType = "hunter",
             difficultyCost = { 5, 10 },
-            countClass = "terminator_nextbot_jerminatorwraith",
+            countClass = "terminator_nextbot_jerminatorsmol",
             minCount = { 2 },
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = nil,
+            name = "jerma_985_common",
+            prettyName = "The Jerma985", -- the leader
+            class = "terminator_nextbot_jerminator_realistic",
+            spawnType = "hunter",
+            difficultyCost = { 50, 100 },
+            countClass = "terminator_nextbot_jerminator*",
+            maxCount = { 1 },
             postSpawnedFuncs = nil,
         },
     }
