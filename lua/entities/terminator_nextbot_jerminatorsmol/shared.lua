@@ -41,7 +41,7 @@ ENT.IsFodder = true
 ENT.CoroutineThresh = 0.0005
 
 ENT.term_SoundPitchShift = 30
-ENT.term_SoundLevelShift = 15
+ENT.term_SoundLevelShift = 10
 
 ENT.AimSpeed = 480
 ENT.WalkSpeed = 175
