@@ -5,9 +5,9 @@ if game.IsDedicated() then
 end
 
 local jermaSpawnSet = {
-    name = "jermas_glee_smol", -- unique name
-    prettyName = "Goblin Jerma Army",
-    description = "Jerma, but his height is accurate to real life.",
+    name = "jermas_glee_big", -- unique name
+    prettyName = "Vertically Blessed Jermas",
+    description = "Jerma, but his height NOT accurate to real life.",
     difficultyPerMin = "default", -- difficulty per minute
     waveInterval = "default", -- time between spawn waves
     diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
@@ -21,23 +21,23 @@ local jermaSpawnSet = {
     chanceToBeVotable = 10,
     spawns = {
         {
-            name = "jerma_98EIGHT",
-            prettyName = "A Jerma988",
-            class = "terminator_nextbot_jerminatorsmol",
+            name = "jerma_98SEVEN",
+            prettyName = "A Jerma987",
+            class = "terminator_nextbot_jerminatorhuge",
             spawnType = "hunter",
-            difficultyCost = { 5, 10 },
-            countClass = "terminator_nextbot_jerminatorsmol",
-            minCount = { 2 },
+            difficultyCost = { 50, 100 },
+            countClass = "terminator_nextbot_jerminatorhuge",
+            minCount = { 1 },
             postSpawnedFuncs = nil,
         },
         {
             hardRandomChance = nil,
             name = "jerma_985_common",
-            prettyName = "The Jerma985", -- the leader
-            class = "terminator_nextbot_jerminator_realistic",
+            prettyName = "The Jerma985", -- the child
+            class = "terminator_nextbot_jerminatorsmol",
             spawnType = "hunter",
             difficultyCost = { 50, 100 },
-            countClass = "terminator_nextbot_jerminator_realistic",
+            countClass = "terminator_nextbot_jerminatorsmol",
             maxCount = { 1 },
             postSpawnedFuncs = nil,
         },
