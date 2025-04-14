@@ -7,7 +7,7 @@ end
 local jermaSpawnSet = {
     name = "jermas_glee_fat", -- unique name
     prettyName = "The Fat Jermas", -- fat albert
-    description = "Jerma, but his width is accurate to real life.",
+    description = "Jerma was inspired by caseoh I guess.",
     difficultyPerMin = "default", -- difficulty per minute
     waveInterval = "default", -- time between spawn waves
     diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
@@ -18,7 +18,7 @@ local jermaSpawnSet = {
     maxSpawnDist = "default",
     roundEndSound = "default",
     roundStartSound = "default",
-    chanceToBeVotable = 11,
+    chanceToBeVotable = 10,
     spawns = {
         {
             name = "jerma_98NINE",
@@ -33,7 +33,7 @@ local jermaSpawnSet = {
         {
             hardRandomChance = nil,
             name = "jerma_98EIGHT_common",
-            prettyName = "The Jerma98EIGHT",
+            prettyName = "The Goblin Jerma",
             class = "terminator_nextbot_jerminatorsmol",
             spawnType = "hunter",
             difficultyCost = { 50, 100 },
