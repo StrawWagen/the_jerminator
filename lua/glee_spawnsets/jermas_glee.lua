@@ -130,6 +130,17 @@ local jermaSpawnSet = {
             maxCount = { 15 },
             postSpawnedFuncs = nil,
         },
+        {
+            hardRandomChance = { 11, 23 },
+            name = "jerma_98NINE_common",
+            prettyName = "A Jerma989",
+            class = "terminator_nextbot_jerminatorwide",
+            spawnType = "hunter",
+            difficultyCost = { 15, 25 },
+            countClass = "terminator_nextbot_jerminatorwide",
+            maxCount = { 7 },
+            postSpawnedFuncs = nil,
+        },
     }
 }
 
