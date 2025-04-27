@@ -2,6 +2,7 @@ AddCSLuaFile()
 ENT.Base = "terminator_nextbot_jerminator_realistic"
 DEFINE_BASECLASS( ENT.Base )
 ENT.PrintName = "Jerma989"
+ENT.Author = "Broadcloth0 + StrawWagen"
 ENT.Spawnable = false
 list.Set( "NPC", "terminator_nextbot_jerminatorwide", {
     Name = "Jerma989",
@@ -20,7 +21,7 @@ function ENT:EnemyIsLethalInMelee()
 
 end
 
-ENT.SpawnHealth = 9000
+ENT.SpawnHealth = 4100 -- maybe his skin shouldn't absorb that much bullets
 ENT.ExtraSpawnHealthPerPlayer = 500
 ENT.MyPhysicsMass = 50000 -- caseoh
 ENT.HealthRegen = 4
@@ -54,7 +55,7 @@ ENT.WeaponBones = {
 
 ENT.IsFatSkinned = 0.75
 
-local wideScale = Vector(1, 1.0, 1.79)
+local wideScale = Vector(1, 1.0, 1.68)
 local weaponScale = Vector(1.0, 1.0, 1.0) -- just to make weapons don't look fat, too my knowledge weapons do NOT eat food.
 
 function ENT:AdditionalInitialize()
@@ -89,7 +90,7 @@ function ENT:OnTakeDamage(dmg)
 
     if dmg:IsBulletDamage() or dmg:IsDamageType( DMG_CLUB ) or dmg:IsDamageType( DMG_SLASH ) then
         damage = damage * ( 4 - self.IsFatSkinned )
-        local pitch = math.random(70, 100)
+        local pitch = math.random(110, 150)
         self:EmitSound( "npc/antlion_grub/squashed.wav", 150, pitch, 0.9, CHAN_BODY )
 
     end
