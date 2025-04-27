@@ -136,9 +136,9 @@ local jermaSpawnSet = {
             prettyName = "A Jerma989",
             class = "terminator_nextbot_jerminatorwide",
             spawnType = "hunter",
-            difficultyCost = { 15, 25 },
+            difficultyCost = { 75, 175 },
             countClass = "terminator_nextbot_jerminatorwide",
-            maxCount = { 7 },
+            maxCount = { 10 },
             postSpawnedFuncs = nil,
         },
     }
