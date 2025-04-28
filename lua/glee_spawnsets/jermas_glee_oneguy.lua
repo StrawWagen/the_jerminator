@@ -1,5 +1,5 @@
-local zambieSpawnSet = {
-    name = "hunters_glee_oneguy", -- unique name
+local jermaSpawnSet = {
+    name = "jermas_glee_oneguy", -- unique name
     prettyName = "One Gleeful Jerma",
     description = "One of each Jerma. Never more.",
     difficultyPerMin = "default", -- difficulty per minute
@@ -72,4 +72,4 @@ local zambieSpawnSet = {
     }
 }
 
-table.insert( GLEE_SPAWNSETS, zambieSpawnSet )
+table.insert( GLEE_SPAWNSETS, jermaSpawnSet )
