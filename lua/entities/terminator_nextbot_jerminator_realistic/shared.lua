@@ -425,6 +425,7 @@ end
 function ENT:DoCustomTasks( defaultTasks )
     self.TaskList = {
         ["jerminator_handler"] = {
+            StartsOnInitialize = true,
             OnCreated = function( self, data )
                 self:Term_SpeakSoundNow( randomJermSoundPath( "spawned" ) )
 
@@ -563,7 +564,7 @@ function ENT:DoCustomTasks( defaultTasks )
 
                 end
             end,
-            OnKilled = function( self, data, damage, ragdoll )
+            OnKilled = function( self, data, attacker, inflictor, ragdoll )
                 local lvl = 95 + self.term_SoundLevelShift
                 local pit = math.Rand( 95, 97 ) + self.term_SoundPitchShift
                 local pos = self:GetShootPos()
@@ -654,5 +655,5 @@ function ENT:DoCustomTasks( defaultTasks )
         },
     }
     table.Merge( self.TaskList, defaultTasks )
-    self:StartTask( "jerminator_handler" )
+
 end
