@@ -82,7 +82,7 @@ local jermaSpawnSet = {
         },
         {
             hardRandomChance = { 10, 20 },
-            name = "jerma_98ZERO_common",
+            name = "jerma_99ZERO_common",
             prettyName = "The Jerma990",
             class = "terminator_nextbot_jerminatorstronk",
             spawnType = "hunter",
