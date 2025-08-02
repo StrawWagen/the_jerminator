@@ -109,6 +109,18 @@ local spawnSet = {
             maxCount = { 1 },
             postSpawnedFuncs = nil,
         },
+        {
+            hardRandomChance = { 0, 2 },
+            name = "jerma_stronk",
+            prettyName = "A Strong Jerma",
+            class = "terminator_nextbot_jerminatorstronk",
+            spawnType = "hunter",
+            difficultyCost = { 200, 250 },
+            difficultyNeeded = { 100, 200 },
+            countClass = "terminator_nextbot_jerminatorstronk",
+            maxCount = { 1 },
+            postSpawnedFuncs = nil,
+        },
     }
 }
 
