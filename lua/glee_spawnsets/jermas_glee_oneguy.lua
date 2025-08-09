@@ -69,6 +69,28 @@ local jermaSpawnSet = {
             maxCount = 1,
             postSpawnedFuncs = nil,
         },
+        {
+            hardRandomChance = { 10, 20 },
+            name = "jerma_98NINE_common",
+            prettyName = "The Jerma989",
+            class = "terminator_nextbot_jerminatorwide",
+            spawnType = "hunter",
+            difficultyCost = { 45, 120 },
+            countClass = "terminator_nextbot_jerminator*",
+            maxCount = 1,
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = { 10, 20 },
+            name = "jerma_99ZERO_common",
+            prettyName = "The Jerma990",
+            class = "terminator_nextbot_jerminatorstronk",
+            spawnType = "hunter",
+            difficultyCost = { 50, 145 },
+            countClass = "terminator_nextbot_jerminator*",
+            maxCount = 1,
+            postSpawnedFuncs = nil,
+        },
     }
 }
 

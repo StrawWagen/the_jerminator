@@ -70,6 +70,10 @@ ENT.DoMetallicDamage = false
 ENT.CanSwim = true
 ENT.BreathesAir = true
 
+ENT.Jerm_IdleFace = "" -- model's default mat
+ENT.Jerm_AngryFace = "jerma985/jermasusimproved"
+ENT.Jerm_PainFace = "jerma985/jermasour"
+
 function ENT:AdditionalInitialize()
     self.isTerminatorHunterChummy = "jerminator"
     self.potentialManiac = math.random( 0, 100 ) < 30
@@ -95,6 +99,10 @@ function ENT:AdditionalInitialize()
 
     self.jerminator_MatState = ""
 
+    if self.Jerm_IdleFace ~= "" then
+        self:SetMaterial( self.Jerm_IdleFace )
+
+    end
 end
 
 local familyFriendlyVar = CreateConVar( "jerminator_familyfriendly", "0", FCVAR_ARCHIVE, "Blocks most jerma sounds that contain swears, etc.", 0, 1 )
@@ -598,16 +606,17 @@ function ENT:DoCustomTasks( defaultTasks )
                 end
             end,
             BehaveUpdatePriority = function( self, data )
-                local reallyAngry = self:IsReallyAngry()
-                local sourFace = self.jerminator_SourFace or 0
+                local myTbl = data.myTbl
+                local reallyAngry = myTbl.IsReallyAngry( self )
+                local sourFace = myTbl.jerminator_SourFace or 0
                 if sourFace > CurTime() then
-                    data.jerminator_MatState = "jerma985/jermasour"
+                    data.jerminator_MatState = myTbl.Jerm_PainFace
 
                 elseif reallyAngry then
-                    data.jerminator_MatState = "jerma985/jermasusimproved"
+                    data.jerminator_MatState = myTbl.Jerm_AngryFace
 
                 else
-                    data.jerminator_MatState = ""
+                    data.jerminator_MatState = myTbl.Jerm_IdleFace
 
                 end
 

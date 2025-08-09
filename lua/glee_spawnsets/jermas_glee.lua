@@ -1,4 +1,3 @@
-
 if game.IsDedicated() then
     RunConsoleCommand( "jerminator_dynamic_content", 1 )
 
@@ -131,14 +130,47 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
+            hardRandomChance = { 1, 4 },
+            name = "jerma_98NINE_rareearly",
+            prettyName = "A Jerma989",
+            class = "terminator_nextbot_jerminatorwide",
+            spawnType = "hunter",
+            difficultyCost = { 25, 50 },
+            countClass = "terminator_nextbot_jerminatorwide",
+            maxCount = { 1 },
+            postSpawnedFuncs = nil,
+        },
+        {
             hardRandomChance = { 11, 23 },
             name = "jerma_98NINE_common",
             prettyName = "A Jerma989",
             class = "terminator_nextbot_jerminatorwide",
             spawnType = "hunter",
             difficultyCost = { 75, 175 },
-            countClass = "terminator_nextbot_jerminatorwide",
+            countClass = "terminator_nextbot_jerminator*",
             maxCount = { 10 },
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = { 1, 4 },
+            name = "jerma_99ZERO_rareearly",
+            prettyName = "A Jerma990",
+            class = "terminator_nextbot_jerminatorstronk",
+            spawnType = "hunter",
+            difficultyCost = { 25, 50 },
+            countClass = "terminator_nextbot_jerminatorstronk",
+            maxCount = { 1 },
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = { 10, 20 },
+            name = "jerma_99ZERO_common",
+            prettyName = "A Jerma990",
+            class = "terminator_nextbot_jerminatorstronk",
+            spawnType = "hunter",
+            difficultyCost = { 45, 155 },
+            countClass = "terminator_nextbot_jerminator*",
+            maxCount = { 3 },
             postSpawnedFuncs = nil,
         },
     }
