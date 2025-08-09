@@ -26,6 +26,41 @@ function ENT:inSeriousDanger()
 
 end
 
+local goCrazyThresh = 0.5 -- keep our cool
+
+function ENT:canDoRun()
+    if self:Health() >= self:GetMaxHealth() * goCrazyThresh then
+        return false
+
+    end
+
+    return BaseClass.canDoRun( self )
+
+end
+
+function ENT:IsAngry()
+    if self:Health() >= self:GetMaxHealth() * goCrazyThresh then
+        return false
+
+    end
+
+    return BaseClass.IsAngry( self )
+
+end
+
+function ENT:IsReallyAngry()
+    if self:Health() >= self:GetMaxHealth() * goCrazyThresh then
+        return false
+
+    end
+
+    return BaseClass.IsReallyAngry( self )
+
+end
+
+ENT.Jerm_IdleFace = "jerma985/jermaswole"
+ENT.Jerm_AngryFace = "jerma985/jermaswole_mad"
+
 
 ENT.PathGoalToleranceFinal = 100
 ENT.SpawnHealth = 2500
