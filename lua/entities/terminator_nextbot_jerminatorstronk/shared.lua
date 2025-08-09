@@ -34,7 +34,7 @@ ENT.CrouchSpeed = 200
 ENT.WalkSpeed = 200
 ENT.MoveSpeed = 320
 ENT.RunSpeed = 550 -- bit SLOWER
-ENT.TERM_WEAPON_PROFICIENCY = WEAPON_PROFICIENCY_POOR 
+ENT.TERM_WEAPON_PROFICIENCY = WEAPON_PROFICIENCY_POOR
 ENT.AccelerationSpeed = 1650 -- fast accel
 ENT.DuelEnemyDist = 850
 
@@ -48,8 +48,8 @@ ENT.WeaponBones = {
     ["ValveBiped.Anim_Attachment_LH"] = true,
 }
 
-local armScale = Vector(1, 1.7, 1.7)
-local weaponScale = Vector(1.0, 1.0, 1.0)
+local armScale = Vector( 1, 1.7, 1.7 )
+local weaponScale = Vector( 1.0, 1.0, 1.0 )
 
 -- Copied from the WIDE jerm
 function ENT:AdditionalInitialize()
