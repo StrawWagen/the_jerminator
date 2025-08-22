@@ -38,7 +38,7 @@ end
 ENT.TERM_MODELSCALE = function() return math.Rand( 0.6, 0.8 ) end
 
 ENT.IsFodder = true
-ENT.CoroutineThresh = 0.0005
+ENT.CoroutineThresh = terminator_Extras.baseCoroutineThresh / 6
 
 ENT.term_SoundPitchShift = 30
 ENT.term_SoundLevelShift = 10
