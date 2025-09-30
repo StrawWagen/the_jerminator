@@ -107,3 +107,11 @@ function ENT:EnemyIsLethalInMelee()
     if not IsValid( enemy ) then return end
 
 end
+
+function ENT:GetWeightOfWeapon( wep )
+    local weight = BaseClass.GetWeightOfWeapon( self, wep )
+    local class = wep:GetClass()
+    if string.find( class, "crowbar" ) then return weight * 10 end -- mmm im so STRONG i can throw this so FAR
+    return weight
+
+end
