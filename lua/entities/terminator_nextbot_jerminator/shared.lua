@@ -34,8 +34,8 @@ ENT.RunSpeed = 360
 ENT.TERM_WEAPON_PROFICIENCY = WEAPON_PROFICIENCY_POOR
 ENT.AccelerationSpeed = 1500
 ENT.JumpHeight = 70 * 1.5
-ENT.FistDamageMul = 1
-ENT.ThrowingForceMul = 1
+ENT.FistDamageMul = 0.25
+ENT.ThrowingForceMul = 0.5
 ENT.SpawnHealth = 200
 ENT.MyPhysicsMass = 150
 
