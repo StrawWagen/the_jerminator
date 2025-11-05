@@ -21,113 +21,22 @@ ENT.SpawnHealth = 350
 ENT.HealthRegen = 10
 ENT.HealthRegenInterval = 0.5
 
-function ENT:CloakedMatFlicker()
-    local toApply = { self }
-    table.Add( toApply, self:GetChildren() )
-    for _, ent in pairs( toApply ) do
-        if not IsValid( ent ) then continue end
-        local entsParent = ent:GetParent()
-        if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
+ENT.IsWraith = true -- enable wraith cloaking logic
+ENT.NotSolidWhenCloaked = true -- if we're a wraith, we become non-solid when cloaked
 
-        if IsValid( ent ) then
-            ent:SetMaterial( "effects/combineshield/comshieldwall3" )
-
-        end
-    end
-    timer.Simple( math.Rand( 0.25, 0.75 ), function()
-        if not IsValid( self ) then return end
-        if self:IsSolid() then return end
-        toApply = { self }
-        table.Add( toApply, self:GetChildren() )
-        for _, ent in pairs( toApply ) do
-            if not IsValid( ent ) then continue end
-            local entsParent = ent:GetParent()
-            if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
-
-            if IsValid( ent ) then
-                ent:SetMaterial( "effects/combineshield/comshieldwall" )
-
-            end
-        end
-    end )
-end
-
-function ENT:PostTookDamage( dmg ) -- no one hit kills!
-    local damage = dmg:GetDamage()
-    local myHealth = self:Health()
-    if damage > myHealth and myHealth >= 25 and damage ~= math.huge then
-        dmg:SetDamage( myHealth + -5 )
-
-    end
-end
-
-function ENT:CanWeaponPrimaryAttack()
-    if not self:IsSolid() then return false end
-    local nextAttack = self.jerminator_NextAttack or 0
-    if nextAttack > CurTime() then return end
-    return BaseClass.CanWeaponPrimaryAttack( self )
+function ENT:PlayHideFX()
+    self:EmitSound( "ambient/levels/citadel/pod_open1.wav", 74, math.random( 115, 125 ) )
+    self.FootstepClomping = false
 
 end
 
-function ENT:DoHiding( hide )
-    local oldHide = not self:IsSolid()
-    if hide == oldHide then return end
-    local nextSwap = self.jerminator_NextHidingSwap or 0
-    if nextSwap > CurTime() then return end
+function ENT:PlayUnhideFX()
+    self:EmitSound( "ambient/levels/citadel/pod_close1.wav", 74, math.random( 115, 125 ) )
+    self.FootstepClomping = true
 
-    if hide then
-        self:SetCollisionGroup( COLLISION_GROUP_DEBRIS )
-        self:SetSolidMask( MASK_NPCSOLID_BRUSHONLY )
-        self:AddFlags( FL_NOTARGET )
-        self:EmitSound( "ambient/levels/citadel/pod_open1.wav", 74, math.random( 115, 125 ) )
-        self.jerminator_NextHidingSwap = CurTime() + math.Rand( 0.25, 0.75 )
-
-        self:CloakedMatFlicker()
-        self:RemoveAllDecals()
-        self.FootstepClomping = false
-
-        local toApply = { self }
-        table.Add( toApply, self:GetChildren() )
-        for _, ent in pairs( toApply ) do
-            if not IsValid( ent ) then continue end
-            local entsParent = ent:GetParent()
-            if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
-            ent:DrawShadow( false )
-            ent:SetNotSolid( true )
-
-        end
-    else
-        self:EmitSound( "ambient/levels/citadel/pod_close1.wav", 74, math.random( 115, 125 ) )
-        self.jerminator_NextHidingSwap = CurTime() + math.Rand( 2.5, 3.5 )
-        self:CloakedMatFlicker()
-        timer.Simple( 0.25, function()
-            if not IsValid( self ) then return end
-            self.jerminator_NextAttack = CurTime() + 0.25
-            self:EmitSound( "buttons/combine_button_locked.wav", 76, 50 )
-            self:SetCollisionGroup( COLLISION_GROUP_NPC )
-            self:SetSolidMask( MASK_NPCSOLID )
-            self:RemoveFlags( FL_NOTARGET )
-
-            self.FootstepClomping = true
-
-            self:OnStuck()
-
-            local toApply = { self }
-            table.Add( toApply, self:GetChildren() )
-            for _, ent in pairs( toApply ) do
-                if not IsValid( ent ) then continue end
-                local entsParent = ent:GetParent()
-                if ent ~= self and ( not IsValid( entsParent ) or entsParent ~= self ) then continue end
-                ent:DrawShadow( true )
-                ent:SetMaterial( "" )
-                ent:SetNotSolid( false )
-
-            end
-        end )
-    end
 end
 
-function ENT:AdditionalThink()
+ENT.wraithTerm_CloakDecidingTask = function( self, data ) -- ran in BehaveUpdatePriority
     local speedSqr = self:GetCurrentSpeedSqr()
     local enem = self:GetEnemy()
     local doHide = IsValid( enem ) or speedSqr > 50^2

@@ -14,6 +14,20 @@ list.Set( "NPC", "terminator_nextbot_jerminator_realistic", {
     Category = "Terminator Nextbot",
 } )
 
+ENT.MySpecialActions = { -- binds 
+    ["jerminator_speak"] = {
+        inBind = IN_RELOAD,
+        drawHint = true,
+        name = "Speak",
+        desc = "Speak a line",
+        ratelimit = 1, -- seconds between uses
+        svAction = function( _drive, _driver, bot )
+            bot:RunTask( "SpeakALine" )
+
+        end,
+    }
+}
+
 if CLIENT then
     language.Add( "terminator_nextbot_jerminator_realistic", ENT.PrintName )
 
@@ -440,6 +454,15 @@ function ENT:DoCustomTasks( defaultTasks )
             end,
             EnemyLost = function( self, data )
                 self:jerm_SpeakARandomSound( "searching" )
+            end,
+            SpeakALine = function ( self, data )
+                local path = "idle"
+                if self:IsReallyAngry() then
+                    path = "anger"
+
+                end
+                self:Term_SpeakSoundNow( randomJermSoundPath( path ) )
+
             end,
             EnemyFound = function( self, data, enemy, sinceLastFound )
                 if sinceLastFound < 10 then return end
