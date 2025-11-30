@@ -201,7 +201,7 @@ function ENT:PrepareStrike( enemy, allies )
         if striker.jerminator_NextCoordinatedStrike and striker.jerminator_NextCoordinatedStrike > cur then continue end
         striker.jerminator_NextCoordinatedStrike = strikeEnd
         striker.jerminator_CoordinatedStrikeWaiting = true
-        striker.terminator_DontImmiediatelyFire = cur + 0.5
+        striker:BlockWeaponFiringUntil( cur + 0.5 )
         striker:Anger( math.random( 1, 5 ) )
 
     end
@@ -234,7 +234,7 @@ function ENT:PrepareStrike( enemy, allies )
 
                 local currEnemy = striker:GetEnemy()
                 if striker.IsSeeEnemy and currEnemy == strikeTarget then
-                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+                    striker:BlockWeaponFiringUntil( cur + 0.5 )
 
                 end
             end
@@ -278,7 +278,7 @@ function ENT:PrepareStrike( enemy, allies )
                 local currEnemy = striker:GetEnemy()
 
                 if striker.IsSeeEnemy and currEnemy == strikeTarget then -- strike if enemy is boxed in, or if most of the group can see the enemy
-                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+                    striker:BlockWeaponFiringUntil( cur + 0.5 )
 
                     validSee = validSee + 1
                     validHasEnemy = validHasEnemy + 1
@@ -296,7 +296,7 @@ function ENT:PrepareStrike( enemy, allies )
 
                 elseif IsValid( currEnemy ) and currEnemy == enemy then
                     validHasEnemy = validHasEnemy + 1
-                    striker.terminator_DontImmiediatelyFire = cur + 0.5
+                    striker:BlockWeaponFiringUntil( cur + 0.5 )
 
                 end
             end
