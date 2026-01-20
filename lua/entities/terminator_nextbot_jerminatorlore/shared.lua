@@ -35,6 +35,7 @@ ENT.FistDamageMul = 0.75
 ENT.ThrowingForceMul = 1.0
 ENT.SpawnHealth = 1500
 ENT.MyPhysicsMass = 1000
+ENT.CanUseStuff = nil
 
 ENT.FootstepClomping = true
 ENT.duelEnemyTimeoutMul = 10
@@ -284,4 +285,5 @@ ENT.MyClassTask = {
             end
         end
     end,
+
 }
