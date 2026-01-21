@@ -3,9 +3,7 @@ The famous streamer? Jerma985? In YOUR garry's mod game?
 With 800+ voicelines?
 Count me in!
 
-# Developer Guide 
-
-This readme is setup to hopefully answer questions you might have making your own clone.
+Keep reading if you want to make your own jerma985 clone!
 
 ## Creating Your Own Clone
 
