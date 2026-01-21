@@ -1,6 +1,11 @@
-# The Jerminator - Developer Guide
+# Jerma985 Nextbot
+The famous streamer? Jerma985? In YOUR garry's mod game?
+With 800+ voicelines?
+Count me in!
 
-A Garry's Mod addon featuring Jerma985 as a Terminator Nextbot. This readme is setup to hopefully answer questions you might have making your own clone.
+# Developer Guide 
+
+This readme is setup to hopefully answer questions you might have making your own clone.
 
 ## Creating Your Own Clone
 
