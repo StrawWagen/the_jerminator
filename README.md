@@ -69,6 +69,7 @@ if not SERVER then return end
 if not doingDynamicContent:GetBool() then
     resource.AddWorkshop( "YOUR_BOT_WORKSHOP_ID" ) -- the workshop id of the bot(sounds?) after you upload it
     resource.AddWorkshop( "YOUR_MODEL_WORKSHOP_ID" )
+
 end
 ```
 
