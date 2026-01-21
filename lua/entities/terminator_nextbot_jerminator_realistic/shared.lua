@@ -63,8 +63,6 @@ if CLIENT then
 end
 
 local JERMINATOR_MODEL = "models/player/giwake/jermaregular.mdl"
-ENT.ARNOLD_MODEL = JERMINATOR_MODEL
-
 ENT.Models = { JERMINATOR_MODEL }
 
 ENT.TERM_FISTS = "weapon_jerminator_fists"
