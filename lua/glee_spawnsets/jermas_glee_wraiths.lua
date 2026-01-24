@@ -5,7 +5,7 @@ if game.IsDedicated() then
 end
 
 local jermaSpawnSet = {
-    name = "jermas_glee_wraith", -- unique name
+    name = "jermas_glee_wraiths", -- unique name
     prettyName = "Wraith Jermas",
     description = "Lots of cloaking Jerma986",
     difficultyPerMin = "default", -- difficulty per minute
