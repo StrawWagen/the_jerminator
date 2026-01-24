@@ -40,28 +40,59 @@ ENT.FootstepClomping = false
 ENT.duelEnemyTimeoutMul = 5
 
 -- Wizard specific settings
-ENT.LightningRange = 1200 -- Same as fireball now
+ENT.LightningRange = 1200
 ENT.LightningDamage = 35
 ENT.LightningBoltCount = 5
 ENT.FireballRange = 1200
 ENT.FireballDamage = 50
 ENT.FireballSpeed = 1500
 
--- Generate a random vibrant color for lightning
+-- Wizard voice lines
+ENT.LightningSounds = {
+    "vo/npc/male01/watchout.wav",
+    "vo/npc/male01/behindyou.wav",
+    "vo/npc/male01/upthere01.wav",
+    "vo/npc/male01/upthere02.wav",
+}
+
+ENT.FireballSounds = {
+    "vo/npc/male01/gethellout.wav",
+    "vo/npc/male01/runforyourlife01.wav",
+    "vo/npc/male01/runforyourlife02.wav",
+    "vo/npc/male01/runforyourlife03.wav",
+}
+
+ENT.AngerSounds = {
+    "vo/npc/male01/ohno.wav",
+    "vo/npc/male01/no01.wav",
+    "vo/npc/male01/no02.wav",
+    "vo/npc/male01/pain01.wav",
+    "vo/npc/male01/pain02.wav",
+}
+
+-- Pre-defined colors table for rainbow lightning (created once)
+local LIGHTNING_COLORS = {
+    Angle( 255, 50, 50 ),      -- Red
+    Angle( 50, 255, 50 ),      -- Green
+    Angle( 50, 50, 255 ),      -- Blue
+    Angle( 255, 255, 50 ),     -- Yellow
+    Angle( 255, 50, 255 ),     -- Magenta
+    Angle( 50, 255, 255 ),     -- Cyan
+    Angle( 255, 150, 50 ),     -- Orange
+    Angle( 180, 50, 255 ),     -- Purple
+    Angle( 255, 100, 200 ),    -- Pink
+    Angle( 100, 255, 150 ),    -- Mint
+}
+
 local function RandomLightningColor()
-    local colors = {
-        Angle( 255, math.random( 0, 100 ), math.random( 0, 100 ) ),   -- Red
-        Angle( math.random( 0, 100 ), 255, math.random( 0, 100 ) ),   -- Green
-        Angle( math.random( 0, 100 ), math.random( 0, 100 ), 255 ),   -- Blue
-        Angle( 255, 255, math.random( 0, 100 ) ),                      -- Yellow
-        Angle( 255, math.random( 0, 100 ), 255 ),                      -- Magenta
-        Angle( math.random( 0, 100 ), 255, 255 ),                      -- Cyan
-        Angle( 255, 150, math.random( 0, 50 ) ),                       -- Orange
-        Angle( 180, math.random( 0, 100 ), 255 ),                      -- Purple
-        Angle( 255, 100, 200 ),                                         -- Pink
-        Angle( 100, 255, 150 ),                                         -- Mint
-    }
-    return colors[ math.random( 1, #colors ) ]
+    return LIGHTNING_COLORS[ math.random( 1, #LIGHTNING_COLORS ) ]
+end
+
+local function GetCastingStartPos( bot )
+    local attachment = bot:GetAttachment( bot:LookupAttachment( "anim_attachment_RH" ) )
+    if attachment then return attachment.Pos end
+    
+    return bot:WorldSpaceCenter() + bot:GetForward() * 20
 end
 
 ENT.MySpecialActions = {
@@ -88,19 +119,20 @@ ENT.MySpecialActions = {
                 targetPos = tr.HitPos
             end
             
-            local startPos = bot:GetAttachment( bot:LookupAttachment( "anim_attachment_RH" ) )
-            startPos = startPos and startPos.Pos or bot:EyePos() + bot:GetForward() * 20 + bot:GetRight() * 15
+            local startPos = GetCastingStartPos( bot )
+            
+            -- Play wizard voice line
+            local sound = bot.LightningSounds[ math.random( 1, #bot.LightningSounds ) ]
+            bot:EmitSound( sound, 80, math.random( 95, 105 ) )
             
             -- Create multiple rainbow lightning bolts
             for i = 1, bot.LightningBoltCount do
                 timer.Simple( ( i - 1 ) * 0.05, function()
                     if not IsValid( bot ) then return end
                     
-                    -- Random offset for each bolt
                     local offset = VectorRand() * 30
                     local boltTarget = targetPos + offset
                     
-                    -- Create lightning effect with random color
                     local fx = EffectData()
                     fx:SetOrigin( startPos )
                     fx:SetStart( boltTarget )
@@ -114,28 +146,28 @@ ENT.MySpecialActions = {
                     fx:SetFlags( 0 )
                     util.Effect( "eff_term_goodarc", fx )
                     
-                    -- Play sound for first bolt only
-                    if i == 1 then
-                        bot:EmitSound( "ambient/energy/zap" .. math.random( 1, 9 ) .. ".wav", 90, math.random( 90, 110 ) )
-                    end
+                    if i ~= 1 then return end
+                    
+                    bot:EmitSound( "ambient/energy/zap" .. math.random( 1, 9 ) .. ".wav", 90, math.random( 90, 110 ) )
                 end )
             end
             
-            -- Deal damage to entities near the target (delayed to match visual)
+            -- Deal damage to entities near the target
             timer.Simple( 0.1, function()
                 if not IsValid( bot ) then return end
                 
                 local damageEnts = ents.FindInSphere( targetPos, 60 )
                 for _, ent in ipairs( damageEnts ) do
-                    if ent ~= bot and ( ent:IsNPC() or ent:IsPlayer() or ent:IsNextBot() ) then
-                        local dmg = DamageInfo()
-                        dmg:SetDamage( bot.LightningDamage )
-                        dmg:SetDamageType( DMG_DISSOLVE )
-                        dmg:SetAttacker( bot )
-                        dmg:SetInflictor( bot )
-                        dmg:SetDamagePosition( targetPos )
-                        ent:TakeDamageInfo( dmg )
-                    end
+                    if ent == bot then continue end
+                    if not ( ent:IsNPC() or ent:IsPlayer() or ent:IsNextBot() ) then continue end
+                    
+                    local dmg = DamageInfo()
+                    dmg:SetDamage( bot.LightningDamage )
+                    dmg:SetDamageType( DMG_DISSOLVE )
+                    dmg:SetAttacker( bot )
+                    dmg:SetInflictor( bot )
+                    dmg:SetDamagePosition( targetPos )
+                    ent:TakeDamageInfo( dmg )
                 end
             end )
             
@@ -151,8 +183,7 @@ ENT.MySpecialActions = {
         ratelimit = 3,
         
         svAction = function( driveController, driver, bot )
-            local startPos = bot:GetAttachment( bot:LookupAttachment( "anim_attachment_RH" ) )
-            startPos = startPos and startPos.Pos or bot:EyePos() + bot:GetForward() * 20 + bot:GetRight() * 15
+            local startPos = GetCastingStartPos( bot )
             
             local aimDir
             local enemy = bot:GetEnemy()
@@ -162,6 +193,10 @@ ENT.MySpecialActions = {
             else
                 aimDir = bot:GetAimVector()
             end
+            
+            -- Play wizard voice line
+            local sound = bot.FireballSounds[ math.random( 1, #bot.FireballSounds ) ]
+            bot:EmitSound( sound, 80, math.random( 95, 105 ) )
             
             local fireball = ents.Create( "prop_physics" )
             if not IsValid( fireball ) then return end
@@ -219,36 +254,46 @@ ENT.MySpecialActions = {
                     effectData:SetScale( 1 )
                     util.Effect( "Explosion", effectData )
                     
-                    local damageEnts = ents.FindInSphere( hitPos, 100 )
-                    for _, ent in ipairs( damageEnts ) do
-                        if ent ~= owner and ( ent:IsNPC() or ent:IsPlayer() or ent:IsNextBot() ) then
-                            local dmg = DamageInfo()
-                            dmg:SetDamage( damage )
-                            dmg:SetDamageType( DMG_BURN + DMG_BLAST )
-                            dmg:SetAttacker( owner )
-                            dmg:SetInflictor( owner )
-                            dmg:SetDamagePosition( hitPos )
-                            ent:TakeDamageInfo( dmg )
-                            ent:Ignite( 5 )
-                        end
+                    -- Use BlastDamageInfo for proper explosion damage
+                    local dmg = DamageInfo()
+                    dmg:SetDamage( damage )
+                    dmg:SetDamageType( DMG_BURN + DMG_BLAST )
+                    dmg:SetAttacker( owner )
+                    dmg:SetInflictor( fireball )
+                    dmg:SetDamagePosition( hitPos )
+                    
+                    util.BlastDamageInfo( dmg, hitPos, 100 )
+                    
+                    -- Ignite survivors
+                    local nearbyEnts = ents.FindInSphere( hitPos, 100 )
+                    for _, ent in ipairs( nearbyEnts ) do
+                        if ent == owner then continue end
+                        if not ( ent:IsNPC() or ent:IsPlayer() or ent:IsNextBot() ) then continue end
+                        
+                        ent:Ignite( 5 )
                     end
                     
                     local fire = ents.Create( "env_fire" )
-                    if IsValid( fire ) then
-                        fire:SetPos( hitPos )
-                        fire:SetKeyValue( "health", "30" )
-                        fire:SetKeyValue( "firesize", "64" )
-                        fire:SetKeyValue( "fireattack", "4" )
-                        fire:SetKeyValue( "damagescale", "1" )
-                        fire:SetKeyValue( "spawnflags", "281" )
-                        fire:Spawn()
-                        fire:Activate()
-                        fire:Fire( "StartFire", "", 0 )
-                        
-                        timer.Simple( 4, function()
-                            if IsValid( fire ) then fire:Remove() end
-                        end )
+                    if not IsValid( fire ) then
+                        fireball:Remove()
+                        return
                     end
+                    
+                    fire:SetPos( hitPos )
+                    fire:SetKeyValue( "health", "30" )
+                    fire:SetKeyValue( "firesize", "64" )
+                    fire:SetKeyValue( "fireattack", "4" )
+                    fire:SetKeyValue( "damagescale", "1" )
+                    fire:SetKeyValue( "spawnflags", "281" )
+                    fire:Spawn()
+                    fire:Activate()
+                    fire:Fire( "StartFire", "", 0 )
+                    
+                    timer.Simple( 4, function()
+                        if not IsValid( fire ) then return end
+                        
+                        fire:Remove()
+                    end )
                     
                     fireball:Remove()
                 end
@@ -257,7 +302,9 @@ ENT.MySpecialActions = {
             end )
             
             timer.Simple( 5, function()
-                if IsValid( fireball ) then fireball:Remove() end
+                if not IsValid( fireball ) then return end
+                
+                fireball:Remove()
             end )
             
             bot:DoGesture( ACT_GMOD_GESTURE_RANGE_ZOMBIE, 1.2 )
@@ -265,75 +312,114 @@ ENT.MySpecialActions = {
     },
 }
 
+local function CreateWizardCone( bot )
+    local cone = ents.Create( "prop_dynamic" )
+    if not IsValid( cone ) then return end
+    
+    cone:SetModel( "models/props_junk/trafficcone001a.mdl" )
+    cone:SetPos( bot:GetPos() + Vector( 0, 0, 80 ) )
+    cone:Spawn()
+    cone:SetColor( Color( 150, 0, 255 ) )
+    cone:SetMaterial( "models/debug/debugwhite" )
+    cone:SetModelScale( 0.69 )
+    
+    local headBone = bot:LookupBone( "ValveBiped.Bip01_Head1" )
+    if headBone then
+        cone:FollowBone( bot, headBone )
+        cone:SetLocalPos( Vector( 14.72, 5.31, 0 ) )
+        cone:SetLocalAngles( Angle( 90, 19.06, 0 ) )
+    else
+        cone:SetParent( bot )
+        cone:SetLocalPos( Vector( 14.72, 5.31, 0 ) )
+        cone:SetLocalAngles( Angle( 90, 19.06, 0 ) )
+    end
+    
+    bot:DeleteOnRemove( cone )
+    bot.WizardCone = cone
+end
+
+local function DropWizardCone( bot )
+    if not IsValid( bot.WizardCone ) then return end
+    
+    local conePos = bot.WizardCone:GetPos()
+    local coneAng = bot.WizardCone:GetAngles()
+    
+    bot.WizardCone:Remove()
+    bot.WizardCone = nil
+    
+    local droppedCone = ents.Create( "prop_physics" )
+    if not IsValid( droppedCone ) then return end
+    
+    droppedCone:SetModel( "models/props_junk/trafficcone001a.mdl" )
+    droppedCone:SetPos( conePos )
+    droppedCone:SetAngles( coneAng )
+    droppedCone:Spawn()
+    droppedCone:SetColor( Color( 150, 0, 255 ) )
+    droppedCone:SetMaterial( "models/debug/debugwhite" )
+    droppedCone:SetModelScale( 0.69 )
+    
+    local phys = droppedCone:GetPhysicsObject()
+    if IsValid( phys ) then
+        phys:SetVelocity( Vector( math.Rand( -50, 50 ), math.Rand( -50, 50 ), 100 ) )
+        phys:AddAngleVelocity( VectorRand() * 200 )
+    end
+    
+    -- Remove after a while
+    timer.Simple( 30, function()
+        if not IsValid( droppedCone ) then return end
+        
+        droppedCone:Remove()
+    end )
+end
+
 ENT.MyClassTask = {
     OnCreated = function( self, data )
         data.lastAttackTime = 0
         
-        -- Create purple wizard cone hat
         timer.Simple( 0.1, function()
             if not IsValid( self ) then return end
             
-            local cone = ents.Create( "prop_dynamic" )
-            if IsValid( cone ) then
-                cone:SetModel( "models/props_junk/trafficcone001a.mdl" )
-                cone:SetPos( self:GetPos() + Vector( 0, 0, 80 ) )
-                cone:Spawn()
-                cone:SetColor( Color( 150, 0, 255 ) )
-                cone:SetMaterial( "models/debug/debugwhite" )
-                cone:SetModelScale( 0.69 )
-                
-                local headBone = self:LookupBone( "ValveBiped.Bip01_Head1" )
-                if headBone then
-                    cone:FollowBone( self, headBone )
-                    cone:SetLocalPos( Vector( 14.72, 5.31, 0 ) )
-                    cone:SetLocalAngles( Angle( 90, 19.06, 0 ) )
-                else
-                    cone:SetParent( self )
-                    cone:SetLocalPos( Vector( 14.72, 5.31, 0 ) )
-                    cone:SetLocalAngles( Angle( 90, 19.06, 0 ) )
-                end
-                
-                self.WizardCone = cone
-            end
+            CreateWizardCone( self )
         end )
+    end,
+    
+    OnAnger = function( self, data )
+        if data.hasPlayedAngerSound then return end
+        
+        data.hasPlayedAngerSound = true
+        local sound = self.AngerSounds[ math.random( 1, #self.AngerSounds ) ]
+        self:EmitSound( sound, 80, math.random( 95, 105 ) )
     end,
     
     BehaveUpdatePriority = function( self, data )
         local enemy = self:GetEnemy()
         if not IsValid( enemy ) then return end
         if not self.IsSeeEnemy then return end
+        if not self:IsAngry() then return end
         
         local dist = self.DistToEnemy or self:GetPos():Distance( enemy:GetPos() )
         
-        -- Lightning now has same range as fireball, prioritize it at closer range
         if dist < self.LightningRange and dist > 200 then
-            if self:CanTakeAction( "LightningStrike" ) then
-                self:TakeAction( "LightningStrike" )
-                return
-            end
+            if not self:CanTakeAction( "LightningStrike" ) then return end
+            
+            self:TakeAction( "LightningStrike" )
+            return
         end
         
         if dist < self.FireballRange and dist > 300 then
-            if self:CanTakeAction( "Fireball" ) then
-                self:TakeAction( "Fireball" )
-                return
-            end
+            if not self:CanTakeAction( "Fireball" ) then return end
+            
+            self:TakeAction( "Fireball" )
+            return
         end
     end,
     
     EnemyFound = function( self, data, newEnemy, secondsSinceLastEnemy )
         self:EmitSound( "vo/npc/male01/answer16.wav" )
-    end,
-    
-    OnRemoved = function( self, data )
-        if IsValid( self.WizardCone ) then
-            self.WizardCone:Remove()
-        end
+        data.hasPlayedAngerSound = false
     end,
     
     OnKilled = function( self, data, attacker, inflictor, ragdoll )
-        if IsValid( self.WizardCone ) then
-            self.WizardCone:Remove()
-        end
+        DropWizardCone( self )
     end,
 }
