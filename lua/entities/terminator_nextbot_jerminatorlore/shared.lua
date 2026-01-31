@@ -58,51 +58,33 @@ ENT.MySpecialActions = {
             bot.BreachActive = true
             bot.BreachStartTime = CurTime()
             
-            bot.BreachLockedAngles = bot:GetAngles()
-            bot.BreachLockedForward = bot:GetForward()
-            
-            bot.StoredWalkSpeed = bot.WalkSpeed
-            bot.StoredMoveSpeed = bot.MoveSpeed
-            bot.StoredRunSpeed = bot.RunSpeed
-            
-            bot.WalkSpeed = 0
-            bot.MoveSpeed = 0
-            bot.RunSpeed = 0
-            
             bot.loco:SetVelocity( Vector( 0, 0, 0 ) )
             
             local tauntAnim = math.random( 1, 2 ) == 1 and ACT_GMOD_TAUNT_DANCE or ACT_GMOD_TAUNT_MUSCLE
-            bot:DoGesture( tauntAnim, 0.8, true )
+            local speed = 3
+            bot:DoGesture( tauntAnim, speed, true )
+            local duration = bot:GetGestureDuration( tauntAnim, speed )
             
-            timer.Simple( 0.5, function()
+            timer.Simple( duration * 0.25, function()
                 if not IsValid( bot ) then return end
                 
-                bot.loco:SetVelocity( Vector( 0, 0, 0 ) )
-                bot:SetAngles( bot.BreachLockedAngles )
                 bot:PerformBurst( 1 )
             end )
             
-            timer.Simple( 1.5, function()
+            timer.Simple( duration * 0.5, function()
                 if not IsValid( bot ) then return end
                 
-                bot.loco:SetVelocity( Vector( 0, 0, 0 ) )
-                bot:SetAngles( bot.BreachLockedAngles )
                 bot:PerformBurst( 2 )
             end )
             
-            timer.Simple( 2.5, function()
+            timer.Simple( duration * 0.75, function()
                 if not IsValid( bot ) then return end
                 
                 bot.loco:SetVelocity( Vector( 0, 0, 0 ) )
-                bot:SetAngles( bot.BreachLockedAngles )
                 bot:PerformBurst( 3 )
-                
-                bot.WalkSpeed = bot.StoredWalkSpeed
-                bot.MoveSpeed = bot.StoredMoveSpeed
-                bot.RunSpeed = bot.StoredRunSpeed
+
                 bot.BreachActive = false
-                bot.BreachLockedAngles = nil
-                bot.BreachLockedForward = nil
+                
             end )
         end,
     },
