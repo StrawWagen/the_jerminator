@@ -13,12 +13,14 @@ list.Set( "NPC", "terminator_nextbot_jerminatorwizard", {
 if CLIENT then
     language.Add( "terminator_nextbot_jerminatorwizard", ENT.PrintName )
     return
+
 end
 
 -- never get close to enemy
 function ENT:EnemyIsLethalInMelee()
     local enemy = self:GetEnemy()
     return IsValid( enemy ) and self.IsSeeEnemy
+
 end
 
 ENT.CoroutineThresh = terminator_Extras.baseCoroutineThresh / 5
@@ -81,22 +83,23 @@ ENT.MySpecialActions = {
         name = "Lightning",
         desc = "Rainbow lightning!",
         ratelimit = 2,
-        
-        svAction = function( driveController, driver, bot )
+
+        svAction = function( _drive, driver, bot )
             local enemy = bot:GetEnemy()
             local targetPos
-            
+
             bot:DoWizardSounds()
-            
+
             bot:DoGesture( ACT_GMOD_GESTURE_RANGE_FRENZY, 1.5 )
 
             timer.Simple( 0.5, function()
                 if not IsValid( bot ) then return end
-            
+
                 local startPos = GetCastingStartPos( bot )
-            
+
                 if not IsValid( driver ) and IsValid( enemy ) then
                     targetPos = enemy:WorldSpaceCenter()
+
                 else
                     local tr = util.TraceLine( {
                         start = bot:EyePos(),
@@ -105,8 +108,9 @@ ENT.MySpecialActions = {
                         mask = MASK_SHOT
                     } )
                     targetPos = tr.HitPos
+
                 end
-                
+
                 local tr = util.TraceLine( {
                     start = startPos,
                     endpos = targetPos,
@@ -114,15 +118,15 @@ ENT.MySpecialActions = {
                     mask = MASK_SHOT
                 } )
                 local hitPos = tr.HitPos
-                
+
                 -- Create multiple rainbow lightning bolts
                 for i = 1, bot.LightningBoltCount do
                     timer.Simple( ( i - 1 ) * 0.05, function()
                         if not IsValid( bot ) then return end
-                        
+
                         local offset = VectorRand() * 30
                         local boltTarget = hitPos + offset
-                        
+
                         local fx = EffectData()
                         fx:SetOrigin( startPos )
                         fx:SetStart( boltTarget )
@@ -135,80 +139,85 @@ ENT.MySpecialActions = {
                         fx:SetEntity( bot )
                         fx:SetFlags( 0 )
                         util.Effect( "eff_term_goodarc", fx )
-                        
+
                         if i ~= 1 then return end
-                        
+
                         bot:EmitSound( "ambient/energy/zap" .. math.random( 1, 9 ) .. ".wav", 90, math.random( 90, 110 ) )
+
                     end )
                 end
-                
+
                 -- Deal damage to entities near the target
                 timer.Simple( 0.1, function()
                     if not IsValid( bot ) then return end
-                    
+
                     local dmg = DamageInfo()
                     dmg:SetDamage( bot.LightningDamage )
                     dmg:SetDamageType( DMG_DISSOLVE + DMG_SHOCK )
                     dmg:SetAttacker( bot )
                     dmg:SetInflictor( bot )
                     dmg:SetDamagePosition( hitPos )
-                    
+
                     util.BlastDamageInfo( dmg, hitPos, 60 )
+
                 end )
             end )
         end,
     },
-    
+
     ["Fireball"] = {
         inBind = IN_ATTACK2,
         drawHint = true,
         name = "Fireball",
         desc = "Launches a fireball at enemy",
         ratelimit = 3,
-        
-        svAction = function( driveController, driver, bot )
-            
+
+        svAction = function( _drive, driver, bot )
             local aimDir
             local enemy = bot:GetEnemy()
-            
+
             bot:DoWizardSounds()
-            
+
             bot:DoGesture( ACT_GMOD_GESTURE_ITEM_THROW, 1.2 )
 
             timer.Simple( 0.5, function()
                 if not IsValid( bot ) then return end
                 local startPos = GetCastingStartPos( bot )
-            
+
                 if not IsValid( driver ) and IsValid( enemy ) then
                     aimDir = ( enemy:WorldSpaceCenter() - startPos ):GetNormalized()
+
                 else
                     aimDir = bot:GetAimVector()
+
                 end
-            
+
                 local fireball = ents.Create( "prop_physics" )
                 if not IsValid( fireball ) then return end
-                
+
                 fireball:SetModel( "models/props_junk/popcan01a.mdl" )
                 fireball:SetPos( startPos )
                 fireball:SetAngles( aimDir:Angle() )
                 fireball:Spawn()
                 fireball:SetNoDraw( true )
                 fireball:SetCollisionGroup( COLLISION_GROUP_PROJECTILE )
-                
+
                 local phys = fireball:GetPhysicsObject()
                 if IsValid( phys ) then
                     phys:SetMass( 100 )
                     phys:SetVelocity( aimDir * bot.FireballSpeed )
                     phys:EnableGravity( false )
+
                 end
-                
+
                 local fireEffect = ents.Create( "env_fire_trail" )
                 if IsValid( fireEffect ) then
                     fireEffect:SetPos( startPos )
                     fireEffect:SetParent( fireball )
                     fireEffect:Spawn()
+
                 end
-                
+
                 local light = ents.Create( "light_dynamic" )
                 if IsValid( light ) then
                     light:SetKeyValue( "brightness", "6" )
@@ -218,30 +227,32 @@ ENT.MySpecialActions = {
                     light:SetParent( fireball )
                     light:Spawn()
                     light:Fire( "TurnOn" )
+
                 end
-                
+
                 bot:EmitSound( "ambient/fire/gascan_ignite1.wav", 80 )
                 fireball:EmitSound( "ambient/fire/ignite.wav", 80 )
-                
+
                 local damage = bot.FireballDamage
                 local owner = bot
-                
+
                 fireball:CallOnRemove( "CleanupEffects", function()
                     SafeRemoveEntity( fireEffect )
                     SafeRemoveEntity( light )
+
                 end )
-                
+
                 timer.Simple( 0.1, function()
                     if not IsValid( fireball ) then return end
-                    
-                    fireball.PhysicsCollide = function( self, data, phys )
+
+                    fireball.PhysicsCollide = function( self, data, _phys )
                         local hitPos = data.HitPos
-                        
+
                         local effectData = EffectData()
                         effectData:SetOrigin( hitPos )
                         effectData:SetScale( 1 )
                         util.Effect( "Explosion", effectData )
-                        
+
                         local attacker = IsValid( owner ) and owner or self
 
                         -- Use BlastDamageInfo for proper explosion damage
@@ -251,15 +262,16 @@ ENT.MySpecialActions = {
                         dmg:SetAttacker( attacker )
                         dmg:SetInflictor( fireball )
                         dmg:SetDamagePosition( hitPos )
-                        
+
                         util.BlastDamageInfo( dmg, hitPos, 100 )
-                        
+
                         local fire = ents.Create( "env_fire" )
                         if not IsValid( fire ) then
                             SafeRemoveEntity( fireball )
                             return
+
                         end
-                        
+
                         fire:SetPos( hitPos )
                         fire:SetKeyValue( "health", "30" )
                         fire:SetKeyValue( "firesize", "64" )
@@ -273,17 +285,21 @@ ENT.MySpecialActions = {
                         timer.Simple( 0.1, function()
                             if not IsValid( fire ) then return end
                             fire:DropToFloor()
+
                         end )
-                        
+
                         SafeRemoveEntityDelayed( fire, 4 )
-                        
+
                         SafeRemoveEntity( fireball )
+
                     end
-                    
+
                     fireball:AddCallback( "PhysicsCollide", fireball.PhysicsCollide )
+
                 end )
-                
+
                 SafeRemoveEntityDelayed( fireball, 5 )
+
             end )
         end,
     },
@@ -301,41 +317,44 @@ end
 local function CreateWizardCone( bot )
     local cone = ents.Create( "prop_dynamic" )
     if not IsValid( cone ) then return end
-    
+
     cone:SetModel( "models/props_junk/trafficcone001a.mdl" )
     cone:SetPos( bot:GetPos() + Vector( 0, 0, 80 ) )
     cone:Spawn()
     cone:SetColor( Color( 150, 0, 255 ) )
     cone:SetMaterial( "models/debug/debugwhite" )
     cone:SetModelScale( 0.69 )
-    
+
     local headBone = bot:LookupBone( "ValveBiped.Bip01_Head1" )
     if headBone then
         cone:FollowBone( bot, headBone )
         cone:SetLocalPos( Vector( 14.72, 5.31, 0 ) )
         cone:SetLocalAngles( Angle( 90, 19.06, 0 ) )
+
     else
         cone:SetParent( bot )
         cone:SetLocalPos( Vector( 14.72, 5.31, 0 ) )
         cone:SetLocalAngles( Angle( 90, 19.06, 0 ) )
+
     end
-    
+
     bot:DeleteOnRemove( cone )
     bot.WizardCone = cone
+
 end
 
 local function DropWizardCone( bot )
     if not IsValid( bot.WizardCone ) then return end
-    
+
     local conePos = bot.WizardCone:GetPos()
     local coneAng = bot.WizardCone:GetAngles()
-    
+
     SafeRemoveEntity( bot.WizardCone )
     bot.WizardCone = nil
-    
+
     local droppedCone = ents.Create( "prop_physics" )
     if not IsValid( droppedCone ) then return end
-    
+
     droppedCone:SetModel( "models/props_junk/trafficcone001a.mdl" )
     droppedCone:SetPos( conePos )
     droppedCone:SetAngles( coneAng )
@@ -343,13 +362,14 @@ local function DropWizardCone( bot )
     droppedCone:SetColor( Color( 150, 0, 255 ) )
     droppedCone:SetMaterial( "models/debug/debugwhite" )
     droppedCone:SetModelScale( 0.69 )
-    
+
     local phys = droppedCone:GetPhysicsObject()
     if IsValid( phys ) then
         phys:SetVelocity( Vector( math.Rand( -50, 50 ), math.Rand( -50, 50 ), 100 ) )
         phys:AddAngleVelocity( VectorRand() * 200 )
+
     end
-    
+
     SafeRemoveEntityDelayed( droppedCone, 30 )
 
 end
@@ -357,38 +377,41 @@ end
 ENT.MyClassTask = {
     OnCreated = function( self, data )
         data.lastAttackTime = 0
-        
+
         timer.Simple( 0.1, function()
             if not IsValid( self ) then return end
-            
             CreateWizardCone( self )
+
         end )
     end,
-    
-    BehaveUpdatePriority = function( self, data )
+
+    BehaveUpdatePriority = function( self, _data )
         local enemy = self:GetEnemy()
         if not IsValid( enemy ) then return end
         if not self.NothingOrBreakableBetweenEnemy then return end
         if not self:IsReallyAngry() then return end
-        
+
         local dist = self.DistToEnemy or self:GetPos():Distance( enemy:GetPos() )
-        
+
         if dist < self.LightningRange and dist > 100 then
             if not self:CanTakeAction( "LightningStrike" ) then return end
-            
+
             self:TakeAction( "LightningStrike" )
             return
+
         end
-        
+
         if dist < self.FireballRange and dist > 300 then
             if not self:CanTakeAction( "Fireball" ) then return end
-            
+
             self:TakeAction( "Fireball" )
             return
+
         end
     end,
-    
-    OnKilled = function( self, data, attacker, inflictor, ragdoll )
+
+    OnKilled = function( self, _data, _attacker, _inflictor, _ragdoll )
         DropWizardCone( self )
+
     end,
 }
