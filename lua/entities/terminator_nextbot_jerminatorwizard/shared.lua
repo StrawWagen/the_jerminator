@@ -198,6 +198,8 @@ ENT.MySpecialActions = {
                 local fireball = ents.Create( "prop_physics" )
                 if not IsValid( fireball ) then return end
 
+                fireball:SetOwner( bot )
+
                 fireball:SetModel( "models/props_junk/popcan01a.mdl" )
                 fireball:SetPos( startPos )
                 fireball:SetAngles( aimDir:Angle() )
@@ -237,7 +239,6 @@ ENT.MySpecialActions = {
                 fireball:EmitSound( "ambient/fire/ignite.wav", 80 )
 
                 local damage = bot.FireballDamage
-                local owner = bot
 
                 fireball:CallOnRemove( "CleanupEffects", function()
                     SafeRemoveEntity( fireEffect )
@@ -256,6 +257,7 @@ ENT.MySpecialActions = {
                         effectData:SetScale( 1 )
                         util.Effect( "Explosion", effectData )
 
+                        local owner = self:GetOwner()
                         local attacker = IsValid( owner ) and owner or self
 
                         -- Use BlastDamageInfo for proper explosion damage
