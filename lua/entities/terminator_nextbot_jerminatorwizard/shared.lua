@@ -37,10 +37,13 @@ ENT.Term_Leaps = true
 ENT.FistDamageMul = 0.25
 ENT.ThrowingForceMul = 0.5
 ENT.SpawnHealth = 250
+ENT.HealthRegen = 10
 ENT.MyPhysicsMass = 150
 
 ENT.FootstepClomping = false
 ENT.duelEnemyTimeoutMul = 5
+
+ENT.jerm_HoldType = "magic"
 
 -- Wizard specific settings
 ENT.LightningRange = 1200
@@ -90,7 +93,7 @@ ENT.MySpecialActions = {
 
             bot:DoWizardSounds()
 
-            bot:DoGesture( ACT_GMOD_GESTURE_RANGE_FRENZY, 1.5 )
+            bot:DoGesture( ACT_GMOD_GESTURE_RANGE_FRENZY, 1 )
 
             timer.Simple( 0.5, function()
                 if not IsValid( bot ) then return end
