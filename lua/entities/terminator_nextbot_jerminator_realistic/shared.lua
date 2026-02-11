@@ -181,6 +181,11 @@ local function randomJermSoundPath( directory )
 
 end
 
+function ENT:jerm_RandomSoundPath( directory )
+    return randomJermSoundPath( directory )
+
+end
+
 local CurTime = CurTime
 local upReallyHigh = Vector( 0, 0, 2000 )
 local strikeInterval = 120
@@ -522,12 +527,9 @@ ENT.MyClassTask = {
     end,
     OnReallyAnger = function( self, data )
         self.jerm_nextRareAngry = CurTime() + math.random( 10, 20 )
-        timer.Simple( 0.1, function()
-            if not IsValid( self ) then return end
-            self:Term_SpeakSoundNow( randomJermSoundPath( "anger" ) )
-            self:jerm_SpeakARandomSound( "anger" )
+        self:Term_SpeakSoundNow( randomJermSoundPath( "anger" ) )
+        self:jerm_SpeakARandomSound( "anger" )
 
-        end )
     end,
     OnInstantKillEnemy = function( self, data )
         local path = randomJermSoundPath( "killed1shot" )

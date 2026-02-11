@@ -33,7 +33,7 @@ function SWEP:HoldTypeThink()
         enemyTbl = entMeta.GetTable( enemy )
 
     end
-    local holdType = "normal"
+    local holdType = ownerTbl.jerm_HoldType or "normal"
     local doFistsTime = myTbl.doFistsTime
 
     local path = ownerTbl.GetPath( owner )
