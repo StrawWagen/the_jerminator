@@ -2,7 +2,7 @@ AddCSLuaFile()
 ENT.Base = "terminator_nextbot_jerminator_realistic"
 DEFINE_BASECLASS( ENT.Base )
 ENT.PrintName = "Jerma989"
-ENT.Author = "Broadcloth0 + StrawWagen"
+ENT.Author = "Broadcloth0"
 ENT.Spawnable = false
 list.Set( "NPC", "terminator_nextbot_jerminatorwide", {
     Name = "Jerma989",
