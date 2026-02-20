@@ -629,7 +629,7 @@ ENT.MyClassTask = {
         end
     end,
     BehaveUpdatePriority = function( self, data )
-        local myTbl = data.myTbl
+        local myTbl = self:GetTable()
         local reallyAngry = myTbl.IsReallyAngry( self )
         local sourFace = myTbl.jerminator_SourFace or 0
         if sourFace > CurTime() then
