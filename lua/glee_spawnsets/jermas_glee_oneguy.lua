@@ -1,3 +1,4 @@
+
 local jermaSpawnSet = {
     name = "jermas_glee_oneguy", -- unique name
     prettyName = "One Gleeful Jerma",
@@ -14,17 +15,6 @@ local jermaSpawnSet = {
     roundStartSound = "default",
     chanceToBeVotable = 5,
     spawns = {
-        {
-            hardRandomChance = nil,
-            name = "jerma_scared", -- unique name
-            prettyName = "The Jerma",
-            class = "terminator_nextbot_jerminator_scared", -- class spawned
-            spawnType = "hunter",
-            difficultyCost = { 5 },
-            countClass = "terminator_nextbot_jerminator*", -- class COUNTED
-            maxCount = 1,
-            postSpawnedFuncs = nil,
-        },
         {
             hardRandomChance = nil,
             name = "jerma_985_common",
@@ -74,6 +64,17 @@ local jermaSpawnSet = {
             name = "jerma_98NINE_common",
             prettyName = "The Jerma989",
             class = "terminator_nextbot_jerminatorwide",
+            spawnType = "hunter",
+            difficultyCost = { 45, 120 },
+            countClass = "terminator_nextbot_jerminator*",
+            maxCount = 1,
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = { 10, 20 },
+            name = "jerma_98NINETYONE_common",
+            prettyName = "The Jerma991",
+            class = "terminator_nextbot_jerminatorwizard",
             spawnType = "hunter",
             difficultyCost = { 45, 120 },
             countClass = "terminator_nextbot_jerminator*",

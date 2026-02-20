@@ -1,7 +1,7 @@
 
 local genericJermCounter = "terminator_nextbot_jerminator*"
 
-local spawnSet = {
+local jermaSpawnSet = {
     name = "jermas_glee_thehorde", -- unique name
     prettyName = "Jerma Overpopulation Crisis",
     description = "We need to do something about all these jermas!",
@@ -87,6 +87,18 @@ local spawnSet = {
         },
         {
             hardRandomChance = { 0, 2 },
+            name = "jerma_wizard_RARE",
+            prettyName = "A Jerma991",
+            class = "terminator_nextbot_jerminatorwizard",
+            spawnType = "hunter",
+            difficultyCost = { 10, 20 },
+            difficultyNeeded = { 10, 75 },
+            countClass = "terminator_nextbot_jerminatorwizard",
+            maxCount = { 2, 4 },
+            postSpawnedFuncs = nil,
+        },
+        {
+            hardRandomChance = { 0, 2 },
             name = "jerma_big",
             prettyName = "A Jerma987",
             class = "terminator_nextbot_jerminatorhuge",
@@ -124,4 +136,4 @@ local spawnSet = {
     }
 }
 
-table.insert( GLEE_SPAWNSETS, spawnSet )
+table.insert( GLEE_SPAWNSETS, jermaSpawnSet )
