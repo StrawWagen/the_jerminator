@@ -1,9 +1,4 @@
 
-if game.IsDedicated() then
-    RunConsoleCommand( "jerminator_dynamic_content", 1 )
-
-end
-
 local jermaSpawnSet = {
     name = "jermas_glee_wraiths", -- unique name
     prettyName = "991... Wizards?",

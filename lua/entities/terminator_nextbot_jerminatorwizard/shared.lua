@@ -20,7 +20,7 @@ end
 -- never get close to enemy
 function ENT:EnemyIsLethalInMelee()
     local enemy = self:GetEnemy()
-    return IsValid( enemy ) and self.IsSeeEnemy
+    return IsValid( enemy ) and self.IsSeeEnemy and enemy:Health() >= 10
 
 end
 
@@ -50,7 +50,7 @@ ENT.jerm_HoldType = "magic"
 ENT.LightningRange = 1200
 ENT.LightningDamage = 35
 ENT.LightningBoltCount = 5
-ENT.FireballRange = 2500
+ENT.FireballRange = 3500
 ENT.FireballDamage = 50
 ENT.FireballSpeed = 2000
 ENT.CanFindWeaponsOnTheGround = false
@@ -70,7 +70,7 @@ local LIGHTNING_COLORS = {
 }
 
 local function RandomLightningColor()
-    return LIGHTNING_COLORS[ math.random( 1, #LIGHTNING_COLORS ) ]
+    return LIGHTNING_COLORS[math.random( 1, #LIGHTNING_COLORS )]
 end
 
 local function GetCastingStartPos( bot )
@@ -259,6 +259,7 @@ ENT.MySpecialActions = {
                         util.Effect( "Explosion", effectData )
 
                         local owner = self:GetOwner()
+                        print( owner )
                         local attacker = IsValid( owner ) and owner or self
 
                         -- Use BlastDamageInfo for proper explosion damage
@@ -380,26 +381,80 @@ local function DropWizardCone( bot )
 
 end
 
+local function SummonWizardCone( bot )
+    if bot.RespawningCone then return end
+    bot.RespawningCone = true
+
+    bot:DoWizardSounds()
+
+    -- todo, better gesture, and use wait
+    bot:DoGesture( ACT_GMOD_GESTURE_ITEM_GIVE, 1, true )
+
+    timer.Simple( 0.6, function()
+        if not IsValid( bot ) then return end
+
+        local headPos = bot:GetPos() + Vector( 0, 0, 80 )
+
+        for i = 1, 5 do
+            timer.Simple( ( i - 1 ) * 0.06, function()
+                if not IsValid( bot ) then return end
+
+                local fx = EffectData()
+                fx:SetOrigin( headPos )
+                fx:SetStart( headPos + VectorRand() * 40 )
+                fx:SetNormal( Vector( 0, 0, 1 ) )
+                fx:SetScale( 1 )
+                fx:SetMagnitude( 8 )
+                fx:SetRadius( 20 )
+                fx:SetAngles( RandomLightningColor() )
+                fx:SetDamageType( 3 )
+                fx:SetEntity( bot )
+                fx:SetFlags( 0 )
+                util.Effect( "eff_term_goodarc", fx )
+
+            end )
+        end
+
+        bot:EmitSound( "ambient/energy/zap" .. math.random( 1, 9 ) .. ".wav", 75, math.random( 120, 140 ) )
+
+        timer.Simple( 0.4, function()
+            if not IsValid( bot ) then return end
+            CreateWizardCone( bot )
+            bot.RespawningCone = false
+
+        end )
+    end )
+end
+
 ENT.MyClassTask = {
     OnCreated = function( self, data )
-        data.lastAttackTime = 0
+        data.lastSpell = CurTime()
 
         timer.Simple( 0.1, function()
             if not IsValid( self ) then return end
-            CreateWizardCone( self )
-
+            SummonWizardCone( self )
         end )
     end,
 
-    BehaveUpdatePriority = function( self, _data )
+    BehaveUpdatePriority = function( self, data )
+        if not IsValid( self.WizardCone ) then
+            local lastSpot = self.LastEnemySpotTime or 0
+            if CurTime() - lastSpot > 5 then
+                SummonWizardCone( self )
+                data.lastSpell = CurTime()
+            end
+        end
+
+        local add = self:IsReallyAngry() and math.Rand( 1, 2 ) or math.Rand( 5, 10 )
+        if ( data.lastSpell + add ) > CurTime() then return end
+
         local enemy = self:GetEnemy()
         if not IsValid( enemy ) then return end
         if not self.NothingOrBreakableBetweenEnemy then return end
-        if not self:IsReallyAngry() then return end
 
         local dist = self.DistToEnemy or self:GetPos():Distance( enemy:GetPos() )
 
-        if dist < self.LightningRange and dist > 100 then
+        if dist < self.LightningRange and dist > 100 and ( self:getLostHealth() > 10 or self:inSeriousDanger() ) then
             if not self:CanTakeAction( "LightningStrike" ) then return end
 
             self:TakeAction( "LightningStrike" )
@@ -407,7 +462,7 @@ ENT.MyClassTask = {
 
         end
 
-        if dist < self.FireballRange and dist > 300 then
+        if dist < self.FireballRange and dist > 150 then
             if not self:CanTakeAction( "Fireball" ) then return end
 
             self:TakeAction( "Fireball" )
