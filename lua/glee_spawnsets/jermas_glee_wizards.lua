@@ -16,8 +16,8 @@ local jermaSpawnSet = {
     chanceToBeVotable = 5,
     spawns = {
         {
-            name = "jerma_98SIX",
-            prettyName = "A Jerma986",
+            name = "jerma_9NINETYONE",
+            prettyName = "A Jerma991",
             class = "terminator_nextbot_jerminatorwizard",
             spawnType = "hunter",
             difficultyCost = { 5, 10 },
