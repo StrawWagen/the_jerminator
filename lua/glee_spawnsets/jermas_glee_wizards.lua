@@ -1,6 +1,6 @@
 
 local jermaSpawnSet = {
-    name = "jermas_glee_wraiths", -- unique name
+    name = "jermas_glee_wizards", -- unique name
     prettyName = "991... Wizards?",
     description = "Jerma found his spellbook! My god did he ever find it.",
     difficultyPerMin = "default", -- difficulty per minute
