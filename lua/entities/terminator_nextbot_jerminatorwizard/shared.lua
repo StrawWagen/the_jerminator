@@ -259,7 +259,6 @@ ENT.MySpecialActions = {
                         util.Effect( "Explosion", effectData )
 
                         local owner = self:GetOwner()
-                        print( owner )
                         local attacker = IsValid( owner ) and owner or self
 
                         -- Use BlastDamageInfo for proper explosion damage
