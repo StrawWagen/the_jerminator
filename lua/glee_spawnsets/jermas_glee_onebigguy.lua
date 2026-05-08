@@ -1,6 +1,6 @@
 
 local jermaSpawnSet = {
-    name = "jermas_glee_oneguy", -- unique name
+    name = "jermas_glee_onebigguy", -- unique name
     prettyName = "The One and Only Jerma987",
     description = "Just one Jerma987. That's it.",
     difficultyPerMin = "default", -- difficulty per minute
@@ -13,14 +13,14 @@ local jermaSpawnSet = {
     maxSpawnDist = { 4500, 6500 },
     roundEndSound = "default",
     roundStartSound = "default",
-    chanceToBeVotable = 1.5,
+    chanceToBeVotable = 2.5,
     spawns = {
         {
             name = "jerma_98SEVEN",
             prettyName = "The Jerma987",
             class = "terminator_nextbot_jerminatorhuge",
             spawnType = "hunter",
-            difficultyCost = { 50, 100 },
+            difficultyCost = 1,
             countClass = "terminator_nextbot_jerminator*",
             postSpawnedFuncs = nil,
         },
