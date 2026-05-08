@@ -4,14 +4,14 @@ ENT.Base = "terminator_nextbot_jerminator_realistic"
 DEFINE_BASECLASS( ENT.Base )
 ENT.PrintName = "Jerma992"
 ENT.Spawnable = false
-list.Set( "NPC", "terminator_nextbot_jermamimic", {
+list.Set( "NPC", "terminator_nextbot_jerma992", {
     Name = "Jerma992",
-    Class = "terminator_nextbot_jermamimic",
+    Class = "terminator_nextbot_jerma992",
     Category = "Terminator Nextbot",
 } )
 
 if CLIENT then
-    language.Add( "terminator_nextbot_jermamimic", ENT.PrintName )
+    language.Add( "terminator_nextbot_jerma992", ENT.PrintName )
 
     local entMeta = FindMetaTable( "Entity" )
 
@@ -33,7 +33,11 @@ if CLIENT then
 end
 
 local MIMIC_MAT   = "jerma985/jermamimictrue"
+local FALSE_MAT   = "jerma985/jermamimicfalse"
 local MIMIC_SCALE = 1.5
+
+local FALSE_THRESHOLD = 1 / 3
+local TRUE_THRESHOLD  = 1 / 4
 
 local CRACK_SOUNDS = {
     "physics/body/body_medium_break1.wav",
@@ -51,6 +55,10 @@ local TRANSFORM_SOUNDS = {
     "npc/zombie/zombie_pain2.wav",
     "npc/zombie/zombie_pain3.wav",
 }
+
+local ORIG_IDLE  = ""
+local ORIG_ANGRY = "jerma985/jermasusimproved"
+local ORIG_PAIN  = "jerma985/jermasour"
 
 local function emitBloodAt( pos, normal )
     local ed = EffectData()
@@ -136,6 +144,29 @@ local function spawnMemory( bot )
         memory:SetMaxHealth( quarterHP )
         memory:SetHealth( quarterHP )
     end )
+end
+
+local function applyFalseSkin( self )
+    self.Jerm_IdleFace  = FALSE_MAT
+    self.Jerm_AngryFace = FALSE_MAT
+    self.Jerm_PainFace  = FALSE_MAT
+    self:SetMaterial( FALSE_MAT )
+
+    self:EmitSound( "physics/flesh/flesh_bloody_impact3.wav", 65, 110, 0.5 )
+    util.ScreenShake( self:GetPos(), 2, 1.5, 0.2, 350 )
+
+    self:SetColor( Color( 210, 160, 160, 255 ) )
+    timer.Simple( 0.35, function()
+        if not IsValid( self ) then return end
+        self:SetColor( Color( 255, 255, 255, 255 ) )
+    end )
+end
+
+local function removeFalseSkin( self )
+    self.Jerm_IdleFace  = ORIG_IDLE
+    self.Jerm_AngryFace = ORIG_ANGRY
+    self.Jerm_PainFace  = ORIG_PAIN
+    self:SetMaterial( ORIG_IDLE )
 end
 
 local function doTransformSequence( self )
@@ -228,15 +259,35 @@ ENT.MySpecialActions = {
 ENT.MyClassTask = {
 
     OnCreated = function( self, data )
-        self.mimicTriggered = false
+        self.mimicTriggered  = false
+        data.falseSkinActive = false
     end,
 
     OnDamaged = function( self, data, dmg )
         if self.mimicTriggered then return end
-        if self:Health() > self:GetMaxHealth() * 0.25 then return end
 
-        self.mimicTriggered = true
-        doTransformSequence( self )
+        local maxHP       = self:GetMaxHealth()
+        local hp          = self:Health()
+        local falseThresh = maxHP * FALSE_THRESHOLD
+        local trueThresh  = maxHP * TRUE_THRESHOLD
+
+        if hp <= trueThresh then
+            self.mimicTriggered  = true
+            data.falseSkinActive = false
+            doTransformSequence( self )
+            return
+        end
+
+        if hp <= falseThresh and not data.falseSkinActive then
+            data.falseSkinActive = true
+            applyFalseSkin( self )
+            return
+        end
+
+        if hp > falseThresh and data.falseSkinActive then
+            data.falseSkinActive = false
+            removeFalseSkin( self )
+        end
     end,
 
     BehaveUpdatePriority = function( self, data )
