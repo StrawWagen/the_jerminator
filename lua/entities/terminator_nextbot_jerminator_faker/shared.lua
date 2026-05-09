@@ -4,14 +4,14 @@ ENT.Base = "terminator_nextbot_jerminator_realistic"
 DEFINE_BASECLASS( ENT.Base )
 ENT.PrintName = "Jerma992"
 ENT.Spawnable = false
-list.Set( "NPC", "terminator_jerminator_faker", {
+list.Set( "NPC", "terminator_nextbot_jerminator_faker", {
     Name = "Jerma992",
-    Class = "terminator_jerminator_faker",
+    Class = "terminator_nextbot_jerminator_faker",
     Category = "Terminator Nextbot",
 } )
 
 if CLIENT then
-    language.Add( "terminator_jerminator_faker", ENT.PrintName )
+    language.Add( "terminator_nextbot_jerminator_faker", ENT.PrintName )
 
     local entMeta = FindMetaTable( "Entity" )
 
