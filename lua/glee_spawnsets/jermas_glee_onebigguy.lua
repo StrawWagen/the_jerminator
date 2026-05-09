@@ -1,8 +1,8 @@
 
 local jermaSpawnSet = {
     name = "jermas_glee_onebigguy", -- unique name
-    prettyName = "The One and Only Jerma987",
-    description = "Just one Jerma987. That's it.",
+    prettyName = "The Vertically Blessed Jerma",
+    description = "Nobody knows why he's so tall...",
     difficultyPerMin = "default", -- difficulty per minute
     waveInterval = "default", -- time between spawn waves
     diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
