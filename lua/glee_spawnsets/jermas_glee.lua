@@ -11,8 +11,8 @@ local jermaSpawnSet = {
     waveInterval = "default", -- time between spawn waves
     diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
     startingBudget = "default", -- so budget isnt 0
-    spawnCountPerDifficulty = "default*1.5", -- max of ten at 10 minutes
-    startingSpawnCount = "default",
+    spawnCountPerDifficulty = "default*0.5", -- max of ten at 10 minutes
+    startingSpawnCount = "default*2",
     maxSpawnCount = "default",
     maxSpawnDist = "default",
     roundEndSound = "default",
