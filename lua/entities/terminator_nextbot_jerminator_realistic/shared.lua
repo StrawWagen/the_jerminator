@@ -73,7 +73,7 @@ ENT.CanSpeak = true
 ENT.NextTermSpeak = 0
 
 ENT.FistDamageMul = 1.5
-ENT.SpawnHealth = 1500
+ENT.SpawnHealth = 1000
 ENT.HealthRegen = 2
 ENT.HealthRegenInterval = 0.5
 
