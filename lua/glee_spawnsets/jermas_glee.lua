@@ -7,11 +7,11 @@ local jermaSpawnSet = {
     name = "jermas_glee", -- unique name
     prettyName = "Jerma's Glee",
     description = "Meet Jerma!",
-    difficultyPerMin = "default*1.5", -- difficulty per minute
-    waveInterval = "default*2",
-    diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
+    difficultyPerMin = "default*1.2", -- difficulty per minute
+    waveInterval = "default*2", -- time between spawn waves
+    diffBumpWhenWaveKilled = "default*0.5", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
     startingBudget = "default", -- so budget isnt 0
-    spawnCountPerDifficulty = "default*0.5", -- max of ten at 10 minutes
+    spawnCountPerDifficulty = "default*0.35", -- max of ten at 10 minutes
     startingSpawnCount = "default*0.75",
     maxSpawnCount = "default",
     maxSpawnDist = "default",
