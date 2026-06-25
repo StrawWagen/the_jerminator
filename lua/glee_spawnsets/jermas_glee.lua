@@ -7,8 +7,8 @@ local jermaSpawnSet = {
     name = "jermas_glee", -- unique name
     prettyName = "Jerma's Glee",
     description = "Meet Jerma!",
-    difficultyPerMin = "default*1.2", -- difficulty per minute
-    waveInterval = "default*2", -- time between spawn waves
+    difficultyPerMin = "default*1.5", -- difficulty per minute
+    waveInterval = "default", -- time between spawn waves
     diffBumpWhenWaveKilled = "default*0.5", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
     startingBudget = "default", -- so budget isnt 0
     spawnCountPerDifficulty = "default*0.35", -- max of ten at 10 minutes
@@ -47,9 +47,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma985",
             class = "terminator_nextbot_jerminator_realistic",
             spawnType = "hunter",
-            difficultyCost = { 10, 15 },
+            difficultyCost = { 15, 25 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 8 },
+            difficultyNeeded = { 20, 50 },
             postSpawnedFuncs = nil,
         },
         {
@@ -58,9 +59,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma985",
             class = "terminator_nextbot_jerminator_realistic",
             spawnType = "hunter",
-            difficultyCost = { 25, 50 },
+            difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 8 },
+            difficultyNeeded = { 35, 80 },
             postSpawnedFuncs = nil,
         },
         {
@@ -69,9 +71,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma986",
             class = "terminator_nextbot_jerminatorwraith",
             spawnType = "hunter",
-            difficultyCost = { 25, 50 },
+            difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorwraith",
             maxCount = { 1 },
+            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -80,9 +83,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma986",
             class = "terminator_nextbot_jerminatorwraith",
             spawnType = "hunter",
-            difficultyCost = { 50, 100 },
+            difficultyCost = { 70, 130 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 4 },
+            difficultyNeeded = { 45, 100 },
             postSpawnedFuncs = nil,
         },
         {
@@ -91,9 +95,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma991",
             class = "terminator_nextbot_jerminatorwizard",
             spawnType = "hunter",
-            difficultyCost = { 15, 40 },
+            difficultyCost = { 25, 55 },
             countClass = "terminator_nextbot_jerminatorwizard",
             maxCount = { 1 },
+            difficultyNeeded = { 20, 50 },
             postSpawnedFuncs = nil,
         },
         {
@@ -102,9 +107,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma991",
             class = "terminator_nextbot_jerminatorwizard",
             spawnType = "hunter",
-            difficultyCost = { 50, 150 },
+            difficultyCost = { 70, 180 },
             countClass = "terminator_nextbot_jerminatorwizard",
             maxCount = { 4 },
+            difficultyNeeded = { 50, 120 },
             postSpawnedFuncs = nil,
         },
         {
@@ -113,9 +119,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma987",
             class = "terminator_nextbot_jerminatorhuge",
             spawnType = "hunter",
-            difficultyCost = { 25, 50 },
+            difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorhuge",
             maxCount = { 1 },
+            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -124,9 +131,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma987",
             class = "terminator_nextbot_jerminatorhuge",
             spawnType = "hunter",
-            difficultyCost = { 50, 150 },
+            difficultyCost = { 70, 180 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 10 },
+            difficultyNeeded = { 50, 120 },
             postSpawnedFuncs = nil,
         },
         {
@@ -135,9 +143,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma988",
             class = "terminator_nextbot_jerminatorsmol",
             spawnType = "hunter",
-            difficultyCost = { 25, 50 },
+            difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorsmol",
             maxCount = { 1 },
+            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -146,9 +155,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma988",
             class = "terminator_nextbot_jerminatorsmol",
             spawnType = "hunter",
-            difficultyCost = { 10, 20 },
+            difficultyCost = { 20, 40 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 15 },
+            difficultyNeeded = { 30, 70 },
             postSpawnedFuncs = nil,
         },
         {
@@ -157,9 +167,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma989",
             class = "terminator_nextbot_jerminatorwide",
             spawnType = "hunter",
-            difficultyCost = { 25, 50 },
+            difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorwide",
             maxCount = { 1 },
+            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -168,9 +179,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma989",
             class = "terminator_nextbot_jerminatorwide",
             spawnType = "hunter",
-            difficultyCost = { 75, 175 },
+            difficultyCost = { 100, 210 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 10 },
+            difficultyNeeded = { 60, 150 },
             postSpawnedFuncs = nil,
         },
         {
@@ -179,9 +191,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma990",
             class = "terminator_nextbot_jerminatorstronk",
             spawnType = "hunter",
-            difficultyCost = { 25, 50 },
+            difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorstronk",
             maxCount = { 1 },
+            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -190,9 +203,10 @@ local jermaSpawnSet = {
             prettyName = "A Jerma990",
             class = "terminator_nextbot_jerminatorstronk",
             spawnType = "hunter",
-            difficultyCost = { 45, 155 },
+            difficultyCost = { 65, 185 },
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 3 },
+            difficultyNeeded = { 55, 130 },
             postSpawnedFuncs = nil,
         },
     }
