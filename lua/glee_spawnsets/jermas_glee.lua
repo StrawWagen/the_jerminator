@@ -42,15 +42,14 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
-            hardRandomChance = { 2, 6 }, -- !!! chance this is even checked
+            hardRandomChance = { 0.2, 1 },
             name = "jerma_985_rareearly",
             prettyName = "A Jerma985",
             class = "terminator_nextbot_jerminator_realistic",
             spawnType = "hunter",
             difficultyCost = { 15, 25 },
             countClass = "terminator_nextbot_jerminator*",
-            maxCount = { 8 },
-            difficultyNeeded = { 20, 50 },
+            maxCount = { 1, 2 },
             postSpawnedFuncs = nil,
         },
         {
@@ -66,7 +65,7 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
-            hardRandomChance = { 1, 4 },
+            hardRandomChance = { 0.2, 1 },
             name = "jerma_98SIX_rareearly",
             prettyName = "A Jerma986",
             class = "terminator_nextbot_jerminatorwraith",
@@ -74,7 +73,6 @@ local jermaSpawnSet = {
             difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorwraith",
             maxCount = { 1 },
-            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -90,7 +88,7 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
-            hardRandomChance = { 1, 4 },
+            hardRandomChance = { 0.2, 1 },
             name = "jerma_98NINETYONE_rareearly",
             prettyName = "A Jerma991",
             class = "terminator_nextbot_jerminatorwizard",
@@ -98,7 +96,6 @@ local jermaSpawnSet = {
             difficultyCost = { 25, 55 },
             countClass = "terminator_nextbot_jerminatorwizard",
             maxCount = { 1 },
-            difficultyNeeded = { 20, 50 },
             postSpawnedFuncs = nil,
         },
         {
@@ -114,7 +111,7 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
-            hardRandomChance = { 1, 4 },
+            hardRandomChance = { 0.2, 1 },
             name = "jerma_98SEVEN_rareearly",
             prettyName = "A Jerma987",
             class = "terminator_nextbot_jerminatorhuge",
@@ -122,7 +119,6 @@ local jermaSpawnSet = {
             difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorhuge",
             maxCount = { 1 },
-            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -138,7 +134,7 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
-            hardRandomChance = { 1, 4 },
+            hardRandomChance = { 0.2, 1 },
             name = "jerma_98EIGHT_rareearly",
             prettyName = "A Jerma988",
             class = "terminator_nextbot_jerminatorsmol",
@@ -146,7 +142,6 @@ local jermaSpawnSet = {
             difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorsmol",
             maxCount = { 1 },
-            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -162,7 +157,7 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
-            hardRandomChance = { 1, 4 },
+            hardRandomChance = { 0.2, 1 },
             name = "jerma_98NINE_rareearly",
             prettyName = "A Jerma989",
             class = "terminator_nextbot_jerminatorwide",
@@ -170,7 +165,6 @@ local jermaSpawnSet = {
             difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorwide",
             maxCount = { 1 },
-            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
@@ -186,7 +180,7 @@ local jermaSpawnSet = {
             postSpawnedFuncs = nil,
         },
         {
-            hardRandomChance = { 1, 4 },
+            hardRandomChance = { 0.2, 1 },
             name = "jerma_99ZERO_rareearly",
             prettyName = "A Jerma990",
             class = "terminator_nextbot_jerminatorstronk",
@@ -194,7 +188,6 @@ local jermaSpawnSet = {
             difficultyCost = { 35, 65 },
             countClass = "terminator_nextbot_jerminatorstronk",
             maxCount = { 1 },
-            difficultyNeeded = { 25, 60 },
             postSpawnedFuncs = nil,
         },
         {
