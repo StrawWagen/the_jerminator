@@ -43,7 +43,7 @@ ENT.LightningRange = 1200
 ENT.LightningDamage = 35
 ENT.LightningBoltCount = 5
 ENT.FireballRange = 3500
-ENT.FireballDamage = 50
+ENT.FireballDamage = 75
 ENT.FireballSpeed = 2000
 ENT.CanFindWeaponsOnTheGround = false
 
@@ -70,6 +70,7 @@ local function GetCastingStartPos( bot )
     if attachment then return attachment.Pos end
 
     return bot:WorldSpaceCenter() + bot:GetForward() * 20
+
 end
 
 ENT.MySpecialActions = {
@@ -202,7 +203,8 @@ ENT.MySpecialActions = {
 
                 local phys = fireball:GetPhysicsObject()
                 if IsValid( phys ) then
-                    phys:SetMass( 100 )
+                    phys:SetMass( 1 ) -- too high and this does more damage than the explosion itself
+                    phys:SetDragCoefficient( 0 )
                     phys:SetVelocity( aimDir * bot.FireballSpeed )
                     phys:EnableGravity( false )
 
@@ -243,6 +245,9 @@ ENT.MySpecialActions = {
                     if not IsValid( fireball ) then return end
 
                     fireball.PhysicsCollide = function( self, data, _phys )
+                        if self.JermFireBallExploded then return end
+                        self.JermFireBallExploded = true
+
                         local hitPos = data.HitPos
 
                         local effectData = EffectData()
