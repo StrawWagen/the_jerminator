@@ -11,7 +11,7 @@ end
 local jermaBossSet = {
     name = "jermas_glee_onebigguy_overcharged", -- unique name
     prettyName = "The Thunderstruck Gargantuan Jerma",
-    description = "Survive against a overcharged tall jerma...",
+    description = "He's big, he's overcharged, and his KILLING instincts are SCREAMING at him.",
     difficultyPerMin = "default", -- difficulty per minute
     waveInterval = "default", -- time between spawn waves
     diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
