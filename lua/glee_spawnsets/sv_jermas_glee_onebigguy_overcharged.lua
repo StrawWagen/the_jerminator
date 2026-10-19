@@ -30,6 +30,7 @@ local jermaBossSet = {
             prettyName = "The Overcharged Jerma987",
             class = "terminator_nextbot_jerminatorhuge",
             spawnType = "hunter",
+            preferredEFlags = GAMEMODE.NavEFlags.UNDER_SKY,
             difficultyCost = 1,
             countClass = "terminator_nextbot_jerminator*",
             maxCount = { 1 },

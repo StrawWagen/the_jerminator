@@ -37,6 +37,7 @@ local jermaSpawnSet = {
             prettyName = "The Overcharged Goblin Jerma King",
             class = "terminator_nextbot_jerminatorsmolking",
             spawnType = "hunter",
+            preferredEFlags = GAMEMODE.NavEFlags.UNDER_SKY,
             difficultyCost = 1,
             countClass = "terminator_nextbot_jerminatorsmolking",
             minCount = { 1 },
