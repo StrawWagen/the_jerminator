@@ -13,6 +13,8 @@ ENT.IsFodder = false
 ENT.SpawnHealth = 10000
 ENT.ExtraSpawnHealthPerPlayer = 2500
 
+ENT.FistDamageMul = 1
+
 local crownScale = 1
 local crownMaterial = "models/debug/debugwhite" -- matte, reads as spray paint
 local crownColor = Color( 255, 190, 60 ) -- gold
