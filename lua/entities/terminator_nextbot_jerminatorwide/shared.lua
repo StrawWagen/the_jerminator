@@ -47,8 +47,8 @@ ENT.WeaponBones = {
 
 ENT.IsFatSkinned = 0.75
 
-local wideScale = Vector(1, 1.0, 1.68)
-local weaponScale = Vector(1.0, 1.0, 1.0) -- just to make weapons don't look fat, too my knowledge weapons do NOT eat food.
+local wideScale = Vector( 1, 1.0, 1.75 )
+local weaponScale = Vector( 1.0, 1.0, 1.0 ) -- just to make weapons don't look fat, too my knowledge weapons do NOT eat food.
 
 function ENT:AdditionalInitialize()
     BaseClass.AdditionalInitialize( self )
@@ -77,12 +77,12 @@ function ENT:PostHitObject( _, damageToDeal )
 
 end
 
-function ENT:OnTakeDamage(dmg)
+function ENT:OnTakeDamage( dmg )
     local damage = dmg:GetDamage()
 
     if dmg:IsBulletDamage() or dmg:IsDamageType( DMG_CLUB ) or dmg:IsDamageType( DMG_SLASH ) then
         damage = damage * ( 4 - self.IsFatSkinned )
-        local pitch = math.random(110, 150)
+        local pitch = math.random( 110, 150 )
         self:EmitSound( "npc/antlion_grub/squashed.wav", 150, pitch, 0.9, CHAN_BODY )
 
     end
