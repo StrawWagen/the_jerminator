@@ -10,10 +10,9 @@ end
 
 local followerHealth = 1 -- 1% of a goblin's 50, rounded up so they aren't born dead
 
-local function postSpawnedFollower( _spawnDat, spawned )
+local function preSpawnedFollower( _spawnDat, spawned )
     spawned.SpawnHealth = followerHealth
-    spawned:SetMaxHealth( followerHealth )
-    spawned:SetHealth( followerHealth )
+    spawned.FistDamageMul = 0.1
 end
 
 local jermaSpawnSet = {
@@ -52,7 +51,7 @@ local jermaSpawnSet = {
             spawnType = "hunter",
             difficultyCost = { 25, 50 }, -- very few of these guys
             countClass = "terminator_nextbot_jerminatorsmol",
-            postSpawnedFuncs = { postSpawnedFollower },
+            preSpawnedFuncs = { preSpawnedFollower },
         },
     }
 }
