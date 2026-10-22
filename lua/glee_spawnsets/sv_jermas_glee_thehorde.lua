@@ -13,9 +13,7 @@ local jermaSpawnSet = {
     startingSpawnCount = 15,
     maxSpawnCount = 30,
     roundEndSound = "the_jerminator/killed1shot/i_remain_long.mp3",
-    roundEndSoundDSP = 133,
     roundStartSound = "the_jerminator/anger/random_sound2.mp3",
-    roundStartSoundDSP = 133,
     chanceToBeVotable = 5,
     spawns = {
         {
