@@ -1,6 +1,10 @@
 
 local newEvent = {
     defaultPercentChancePerMin = 0.1,
+    secret = {
+        keyword = "the horror",
+        chanceIncrease = 1,
+    },
 
     doesDedicationProgression = true,
     navmeshEvent = true,
