@@ -13,7 +13,7 @@ local jermaSpawnSet = {
     maxSpawnDist = "default",
     roundEndSound = "default",
     roundStartSound = "default",
-    chanceToBeVotable = 10,
+    chanceToBeVotable = 3,
     spawns = {
         {
             name = "jerma_98NINE",
