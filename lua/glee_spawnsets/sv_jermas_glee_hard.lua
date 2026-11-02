@@ -9,14 +9,15 @@ local jermaSpawnSet = {
     description = "Such glee in a Jerma985 is relatively rare, but a sight to behold.",
     difficultyPerMin = "default", -- difficulty per minute
     waveInterval = "default", -- time between spawn waves
-    diffBumpWhenWaveKilled = "default*0.5", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
+    diffBumpWhenWaveKilled = "default", -- when there's <= 1 hunter left, the difficulty is permanently bumped by this amount
     startingBudget = "default", -- so budget isnt 0
-    spawnCountPerDifficulty = "default*0.7", -- max of ten at 10 minutes
-    startingSpawnCount = "default*0.75",
+    spawnCountPerDifficulty = "default", -- max of ten at 10 minutes
+    startingSpawnCount = "default",
     maxSpawnCount = "default",
     maxSpawnDist = "default",
     roundEndSound = "default",
     roundStartSound = "default",
+    chanceToBeVotable = 5,
     spawns = {
         {
             hardRandomChance = nil,
