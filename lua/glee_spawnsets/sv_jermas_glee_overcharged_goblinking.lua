@@ -38,7 +38,6 @@ local jermaSpawnSet = {
             spawnType = "hunter",
             preferredEFlags = GAMEMODE.NavEFlags.UNDER_SKY,
             difficultyCost = 1,
-            countClass = "terminator_nextbot_jerminatorsmolking",
             minCount = { 1 },
             maxCount = { 1 },
             postSpawnedFuncs = { postSpawnedAlwaysOvercharge },
@@ -50,7 +49,6 @@ local jermaSpawnSet = {
             class = "terminator_nextbot_jerminatorsmol",
             spawnType = "hunter",
             difficultyCost = { 25, 50 }, -- very few of these guys
-            countClass = "terminator_nextbot_jerminatorsmol",
             preSpawnedFuncs = { preSpawnedFollower },
         },
     }

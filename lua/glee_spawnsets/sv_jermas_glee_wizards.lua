@@ -21,7 +21,6 @@ local jermaSpawnSet = {
             class = "terminator_nextbot_jerminatorwizard",
             spawnType = "hunter",
             difficultyCost = { 5, 10 },
-            countClass = "terminator_nextbot_jerminatorwizard",
             minCount = { 2 },
             postSpawnedFuncs = nil,
         },
