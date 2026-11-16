@@ -49,72 +49,23 @@ local soundLocation = "your_character_name/"
 ```
 This must match your sound folder name because `doSounds()` uses it to build the file paths.
 
-#### 2. Setup Dynamic Content Loading
+#### 2. Setup Your Workshop Content
 
-Sounds can take up alot of space. This system lets server admins choose whether to force-download everything on join (static) or only download when the bot spawns (dynamic).
+Sounds can take up alot of space.
 If you don't setup this system, your work is much less appealing to server hosts.
 
-**Create autorun file `lua/autorun/yourcharacter_nextbot_autorun.lua`:**
-
-This handles the cvar, and AddWorkshops the items if dynamic content is off 
+**In your entity's shared.lua, swap in your own workshop ids:**
 
 ```lua
-local doingDynamicContent = CreateConVar( "yourcharacter_dynamic_content", 0, 
-    { FCVAR_ARCHIVE, FCVAR_REPLICATED }, 
-    "Dynamically request content when bot spawns?" )
-
-if not SERVER then return end
-
--- If dynamic content is disabled, mount the workshop items normally
-if not doingDynamicContent:GetBool() then
-    resource.AddWorkshop( "YOUR_BOT_WORKSHOP_ID" ) -- the workshop id of the bot(sounds?) after you upload it
-    resource.AddWorkshop( "YOUR_MODEL_WORKSHOP_ID" )
-
-end
+ENT.MyWorkshopContentIds = {
+    "YOUR_BOT_WORKSHOP_ID", -- the workshop id of the bot(sounds?) after you upload it
+    "YOUR_MODEL_WORKSHOP_ID",
+}
 ```
 
-**In your entity's shared.lua (CLIENT section):**
-
-Replace the existing `AdditionalClientInitialize` function:
-
-```lua
-if CLIENT then
-    language.Add( "terminator_nextbot_yourcharacter", ENT.PrintName )
-
-    local contentVar = GetConVar( "yourcharacter_dynamic_content" )
-    local gotModelContent
-    local gotSoundContent
-    local attempts = 0
-
-    function ENT:AdditionalClientInitialize()
-        -- AdditionalClientInitialize is called when a specific entity first appears on a client.
-        
-        if not contentVar:GetBool() then return end -- only do this logic if the dynamic content system is turned on
-
-        if attempts >= 2 then return end  -- dont do this forever
-
-        if not gotModelContent then
-            attempts = attempts + 1
-            steamworks.DownloadUGC( "YOUR_MODEL_WORKSHOP_ID", function( path )
-                if not path then return end
-                gotModelContent = game.MountGMA( path )
-
-            end )
-        end
-        
-        if not gotSoundContent then
-            attempts = attempts + 1
-            steamworks.DownloadUGC( "YOUR_BOT_WORKSHOP_ID", function( path )
-                if not path then return end
-                gotSoundContent = game.MountGMA( path )
-
-            end )
-        end
-    end
-    return
-
-end
-```
+The terminator base handles the rest.
+Downloads at join, unless the server owner sets `terminator_myworkshopcontentids_ondemand 1`, then players get it when they first see your bot.
+See `ENT.MyWorkshopContentIds` in the Terminator Nextbot's README.
 
 #### 3. Optional Customization
 
