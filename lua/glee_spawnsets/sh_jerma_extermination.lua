@@ -15,8 +15,8 @@ local jermaSpawnSet = {
     startingSpawnCount = "default",
     maxSpawnCount = "default",
     maxSpawnDist = "default",
-    roundEndSound = "default",
-    roundStartSound = "default",
+    roundEndSound = "the_jerminator/killed1shot/And just like that he was never heard from again.mp3",
+    roundStartSound = "the_jerminator/anger/How many shots does it take until you get to the center of a god damm soldier that_s what I want to know.mp3",
     spawns = {
         {
             hardRandomChance = nil,
@@ -182,11 +182,7 @@ local jermaSpawnSet = {
     }
 }
 
-    table.Merge( set, setSv )
-
-end
-
-function set:Activate()
+function jermaSpawnSet:Activate()
     local setHelpers = GAMEMODE.setHelpers
     setHelpers.makeHardcore( self )
 
