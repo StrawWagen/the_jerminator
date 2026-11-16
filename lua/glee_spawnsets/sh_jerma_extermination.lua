@@ -17,6 +17,7 @@ local jermaSpawnSet = {
     maxSpawnDist = "jermas_glee",
     roundEndSound = "the_jerminator/killed1shot/And just like that he was never heard from again.mp3",
     roundStartSound = "the_jerminator/anger/How many shots does it take until you get to the center of a god damm soldier that_s what I want to know.mp3",
+    chanceToBeVotable = 2,
     spawns = {
         {
             hardRandomChance = nil,
