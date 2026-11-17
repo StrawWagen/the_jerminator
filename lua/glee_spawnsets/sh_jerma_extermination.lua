@@ -16,7 +16,7 @@ local jermaSpawnSet = {
     spawns = {
         {
             hardRandomChance = { 10, 20 },
-            name = "jerma_98SEVEN_common",
+            name = "jerma_98SEVEN_boss",
             prettyName = "The Jerma987",
             class = "terminator_nextbot_jerminatorhuge",
             spawnType = "hunter",
