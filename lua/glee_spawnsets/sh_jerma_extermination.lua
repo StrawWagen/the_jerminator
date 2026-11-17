@@ -35,7 +35,7 @@ local jermaSpawnSet = {
                     jerma_scared = NULL,
                     jerma_normal = NULL,
                     jerma_985_rareearly = NULL,
-                    jerma_985_common = NULL.
+                    jerma_985_common = NULL,
                     jerma_98SIX_rareearly = NULL,
                     jerma_98SIX_common = NULL,
                     jerma_98NINETYONE_rareearly = NULL,
@@ -50,10 +50,6 @@ local jermaSpawnSet = {
                     },
                 },
             },
-        },
-    },
-
-
 }
 
 function jermaSpawnSet:Activate()
